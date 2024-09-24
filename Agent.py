@@ -6,15 +6,16 @@ What I want this class to do:
 3. find which beliefs are found by a supermajority
 4. Take the deductive closure on the beliefs
 """
-import Agenda
+from Boolean import *
 
-class Person:
-    def __init__(self, agenda: 'Agenda'):
-        self.agenda: 'Agenda' = agenda
-        self.connections: list[Person] = []
+class Agent:
+    def __init__(self, agenda: 'Boolean'):
+        self.connections: list[Agent] = list()
+        self.agenda: 'Boolean' = agenda
+        self.judgments: set[Sentence] = set()
 
-    def add_connection(self, connection: 'Person') -> None:
-        return
+    def add_connection(self, connection: 'Agent') -> None:
+        self.connections.add(connection)
     
     def deductive_closure(self) -> None:
         return
