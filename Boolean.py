@@ -8,11 +8,12 @@ For now:
 4. check logical equivalence between arbitrary boolean sentences
 
 """
+type Sentence = list[str]
+type TruthTable = list[bool]
 
 class Boolean:
-    def __init__(self, propositions: list[chr]) -> None:
-        self.propositions = propositions
-        self.sentences: list[chr] = []
+    def __init__(self, propositions: list[str]) -> None:
+        self.sentences = dict[Sentence, TruthTable] = {p: [1, 0] for p in propositions}
         self.operations: dict[str, callable[[bool, bool], bool]] = {
             "not": lambda p: not p,
             "and": lambda p, q: p and q,
@@ -20,5 +21,8 @@ class Boolean:
             "implies": lambda p, q: (not p) or q,
         }
 
-    def add_sentence(sentence: list[chr]) -> None:
+    def add_sentence(sentence: list[str]) -> None:
         return
+    
+    def add_proposition(self, proposition: list[str]) -> None:
+        self.sentences[proposition] = [1, 0]
