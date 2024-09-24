@@ -13,7 +13,7 @@ type TruthTable = list[bool]
 
 class Boolean:
     def __init__(self, propositions: list[str]) -> None:
-        self.sentences = dict[Sentence, TruthTable] = {p: [1, 0] for p in propositions}
+        self.sentences = dict[Sentence, TruthTable] = {p: [0, 1] for p in propositions}
         self.operations: dict[str, callable[[bool, bool], bool]] = {
             "not": lambda p: not p,
             "and": lambda p, q: p and q,
@@ -25,4 +25,8 @@ class Boolean:
         return
     
     def add_proposition(self, proposition: list[str]) -> None:
-        self.sentences[proposition] = [1, 0]
+        self.sentences[proposition] = [0, 1]
+
+    def __str__(self) -> None:
+        # Print all propositions with truth tables
+        return
