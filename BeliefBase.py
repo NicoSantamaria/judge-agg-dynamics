@@ -15,20 +15,19 @@ Logical sentences are understood in Polish notation:
 ['implies', 'p', 'q'] yields 'p implies q'
 """
 
-
 from itertools import product
 
-type Sentence = list[chr]
+type Sentence = list[str]
 type Interpretation = tuple[int]
-type Atoms = dict[chr, int]
+type Atoms = dict[str, int]
 
 class BeliefBase:
-    def __init__(self, 
-        propositions: list[chr],
+    def __init__(self,
+        atoms: Atoms=dict(),
         constraints: list[Sentence]=list(),
     ) -> None:
         # the atomic propositions
-        self.atoms: Atoms = { prop: 1 for prop in propositions }
+        self.atoms: Atoms = atoms or dict()
 
         # the standard logical operations
         self.operations: dict[chr, callable[[bool, bool], bool]] = {
@@ -66,15 +65,6 @@ class BeliefBase:
     def get_conjunction(self, sentence1: Sentence, sentence2: Sentence) -> Sentence:
         # represent the conjunction of two sentences in Polish Notation
         return ["∧"] + sentence1 + sentence2
-    
-    def add_constraint(self, sentence: Sentence) -> None:
-        # add a new constraint to the single conjunctive sentence
-        self.constraints = self.add_constraint(
-            sentence, self.constraints
-        )
-
-        # and update the models accordingly
-        models = self.get_models()
         
 
     def evaluate_sentence(self, interpretation: Interpretation, sentence: Sentence) -> bool:
@@ -88,13 +78,17 @@ class BeliefBase:
         ))
 
         # evaluate the polish notation using the stack
-        for char in sentence[::-1]:
+        for char in reversed(sentence):
             if char in self.operations.keys():
                 operation = self.operations[char]
-                second = stack.pop()
-                first = stack.pop()
 
-                stack.append(operation(second, first))
+                if char == "¬":
+                    first = stack.pop()
+                    stack.append(operation(first))
+                else:
+                    second = stack.pop()
+                    first = stack.pop()
+                    stack.append(operation(second, first))
             else:
                 stack.append(interp[char])
 
@@ -107,12 +101,12 @@ class BeliefBase:
         models: list[Interpretation] = list()
 
         for interp in product([0, 1], repeat=len(self.atoms)):
-            if self.evaluate_sentence(interp, self.constraints):
+            if not self.constraints or self.evaluate_sentence(interp, self.constraints):
                 models.append(interp)
 
         return models
     
 
 # testing
-K = BeliefBase(["p", "q", "r", "s"], [["⇔", "r", "⇒", "p", "q"]])
+K = BeliefBase({"p": 1, "q": 1, "r": 1, "s": 1}, [["⇔", "r", "⇒", "p", "q"], ['⇔', 's', '⇒', 'p', 'q']])
 K.models
