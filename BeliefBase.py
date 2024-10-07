@@ -5,15 +5,12 @@ type Interpretation = tuple[int]
 type Atoms = dict[chr, int]
 
 class BeliefBase:
-    def __init__(self, propositions: list[chr]) -> None:
+    def __init__(self, 
+        propositions: list[chr],
+        constraints: list[Sentence]=list(),
+    ) -> None:
         self.atoms: Atoms = {prop: 1 for prop in propositions}
-        self.constraints: list[Sentence] = []
-        self.models: list[Interpretation] = []
-
-        self.interpretations: list[Interpretation] = list(
-            product([0, 1], repeat=len(self.atoms))
-        )
-
+        self.constraints: list[Sentence] = constraints
         self.operations: dict[chr, callable[[bool, bool], bool]] = {
             "¬": lambda p: not p,
             "⇒": lambda p, q: (not p) or q,
@@ -21,6 +18,8 @@ class BeliefBase:
             "∧": lambda p, q: p and q,
             "∨": lambda p, q: p or q,
         }
+
+        self.models: list[Interpretation] = self.get_models()
 
 
     def add_constraint(self, sentence: Sentence) -> None:
@@ -31,7 +30,7 @@ class BeliefBase:
 
 
     def evaluate_sentence(self, interpretation: Interpretation, sentence: Sentence) -> bool:
-        stack: list[chr] = []
+        stack: list[chr] = list()
         interp: Atoms = dict(zip(
             self.atoms.keys(), 
             interpretation
@@ -49,16 +48,19 @@ class BeliefBase:
 
         return stack[0]
     
-    def get_models(self) -> None:
-        for interp in self.interpretations:
+    
+    def get_models(self) -> list[Interpretation]:
+        models: list[Interpretation] = list()
+
+        for interp in product([0, 1], repeat=len(self.atoms)):
 
             # constraints shouldn't be a list!
             if self.evaluate_sentence(interp, self.constraints[0]):
-                self.models.append(interp)
+                models.append(interp)
+
+        return models
     
 
 # testing
-K = BeliefBase(["p", "q", "r"])
-K.add_constraint(["⇔", "r", "⇒", "p", "q"])
-K.get_models()
+K = BeliefBase(["p", "q", "r", "s"], [["⇔", "r", "⇒", "p", "q"]])
 K.models
