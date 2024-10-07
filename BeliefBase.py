@@ -9,8 +9,7 @@ class BeliefBase:
         propositions: list[chr],
         constraints: list[Sentence]=list(),
     ) -> None:
-        self.atoms: Atoms = {prop: 1 for prop in propositions}
-        self.constraints: list[Sentence] = constraints
+        self.atoms: Atoms = { prop: 1 for prop in propositions }
         self.operations: dict[chr, callable[[bool, bool], bool]] = {
             "¬": lambda p: not p,
             "⇒": lambda p, q: (not p) or q,
@@ -19,15 +18,31 @@ class BeliefBase:
             "∨": lambda p, q: p or q,
         }
 
+        self.constraints = self.get_constraints(constraints)
         self.models: list[Interpretation] = self.get_models()
 
+    def get_constraints(self, constraints: list[Sentence]) -> Sentence:
+        if not constraints:
+            return list()
+        
+        constraint_sentence: Sentence = constraints[0]
 
+        for sentence in constraints[1:]:
+            constraint_sentence = self.get_conjunction(
+                constraint_sentence,
+                sentence
+            )
+
+        return constraint_sentence
+    
+    def get_conjunction(self, sentence1: Sentence, sentence2: Sentence) -> Sentence:
+        return ["∧"] + sentence1 + sentence2
+    
     def add_constraint(self, sentence: Sentence) -> None:
-        """
-        This should actually add each new constraint in conjunction with the previous constraints
-        """
-        self.constraints.append(sentence)
-
+        self.constraints = self.add_constraint(
+            sentence, self.constraints
+        )
+        
 
     def evaluate_sentence(self, interpretation: Interpretation, sentence: Sentence) -> bool:
         stack: list[chr] = list()
@@ -48,14 +63,14 @@ class BeliefBase:
 
         return stack[0]
     
-    
+
     def get_models(self) -> list[Interpretation]:
         models: list[Interpretation] = list()
 
         for interp in product([0, 1], repeat=len(self.atoms)):
 
             # constraints shouldn't be a list!
-            if self.evaluate_sentence(interp, self.constraints[0]):
+            if self.evaluate_sentence(interp, self.constraints):
                 models.append(interp)
 
         return models
