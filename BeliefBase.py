@@ -1,3 +1,21 @@
+"""
+Belief Base
+
+This class represents belief systems as a set of propositional
+sentences under standard logic. Given a number of atomic propositions
+and logic constraints on those propositions, the class computes
+every combination of truth values that render the given belief system
+true with the respect to the constraints. 
+
+Using the parlance of judgment aggregation theory, the class computes
+every possible consistent judgment set on a given agenda. 
+
+Logical sentences are understood in Polish notation:
+
+['implies', 'p', 'q'] yields 'p implies q'
+"""
+
+
 from itertools import product
 
 type Sentence = list[chr]
@@ -9,7 +27,10 @@ class BeliefBase:
         propositions: list[chr],
         constraints: list[Sentence]=list(),
     ) -> None:
+        # the atomic propositions
         self.atoms: Atoms = { prop: 1 for prop in propositions }
+
+        # the standard logical operations
         self.operations: dict[chr, callable[[bool, bool], bool]] = {
             "¬": lambda p: not p,
             "⇒": lambda p, q: (not p) or q,
@@ -18,10 +39,17 @@ class BeliefBase:
             "∨": lambda p, q: p or q,
         }
 
+        # computes the set of logical constraints as a single conjunctive
+        # propositional sentence; this makes it easier to find models
         self.constraints = self.get_constraints(constraints)
+
+        # computes all the combinations of truth-values on the atomic propositions
+        # that satisfy the constraints: stores the models as binary tuples
         self.models: list[Interpretation] = self.get_models()
 
     def get_constraints(self, constraints: list[Sentence]) -> Sentence:
+        # build the single conjunctive sentence from the list of
+        # given constraints. 
         if not constraints:
             return list()
         
@@ -36,21 +64,30 @@ class BeliefBase:
         return constraint_sentence
     
     def get_conjunction(self, sentence1: Sentence, sentence2: Sentence) -> Sentence:
+        # represent the conjunction of two sentences in Polish Notation
         return ["∧"] + sentence1 + sentence2
     
     def add_constraint(self, sentence: Sentence) -> None:
+        # add a new constraint to the single conjunctive sentence
         self.constraints = self.add_constraint(
             sentence, self.constraints
         )
+
+        # and update the models accordingly
+        models = self.get_models()
         
 
     def evaluate_sentence(self, interpretation: Interpretation, sentence: Sentence) -> bool:
+        # evaluate the truth value of a propositional sentence given an interpretation
+        # of the atomic propositions, e.g., (1,0) on (p, q) yields false for 
+        # 'p implies q'
         stack: list[chr] = list()
         interp: Atoms = dict(zip(
             self.atoms.keys(), 
             interpretation
         ))
 
+        # evaluate the polish notation using the stack
         for char in sentence[::-1]:
             if char in self.operations.keys():
                 operation = self.operations[char]
@@ -65,11 +102,11 @@ class BeliefBase:
     
 
     def get_models(self) -> list[Interpretation]:
+        # compute all the combinations of truth-values for the atomic
+        # propositions which satisfy the constraints
         models: list[Interpretation] = list()
 
         for interp in product([0, 1], repeat=len(self.atoms)):
-
-            # constraints shouldn't be a list!
             if self.evaluate_sentence(interp, self.constraints):
                 models.append(interp)
 
