@@ -19,15 +19,10 @@ class Agent:
         self.models: List[Interpretation] = self.get_models()
 
     def get_models(self) -> List[Interpretation]:
-        # if the judgment set is complete, there is one model given directly
-        # by the beliefs
-        if -1 not in self.beliefs.values():
-            return self.beliefs.values()
-        
         models: List[Interpretation] = list()
 
-        # brute force the possible intepretations on the propositions
-        for interp in product([0, 1], repeat=len(self.agenda.atoms)):
+        # pull from the models which satisfy the integrity constraints
+        for interp in self.agenda.models:
 
             # tracks if the current interpretation is a valid model
             candidate: bool = True
@@ -43,18 +38,17 @@ class Agent:
                     candidate = False
                     break
 
+            # add to agent models if the interp matches the agent's beliefs
             if candidate:
-                # check that the candidate satisfies the agenda's constraints
-                eval = self.agenda.evaluate_sentence(
-                    interp, self.agenda.constraints
-                )
-
-                if eval:
-                    models.append(interp)
+                models.append(interp)
 
         return models
+    
+    def update_beliefs(self, beliefs: Beliefs) -> None:
+        self.beliefs = beliefs
+        self.models = self.get_models()
         
 # testing
 IC = BeliefBase(["p", "q", "r", "s"], [["⇔", "r", "⇒", "p", "q"], ['⇔', 's', '∧', 'p', 'q']])
-K = Agent(IC, {"p": 0, "q": 0, "r": 1, "s": 0})
+K = Agent(IC, {"p": 0, "q": 0, "r": -1, "s": 0})
 K.models
