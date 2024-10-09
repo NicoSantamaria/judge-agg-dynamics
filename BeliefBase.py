@@ -16,21 +16,19 @@ Logical sentences are understood in Polish notation:
 """
 
 from itertools import product
+from typing import *
 
-type Sentence = list[str]
-type Interpretation = tuple[int]
-type Atoms = dict[str, int]
+type Sentence = List[str]
+type Interpretation = Tuple[int]
+type Atoms = Dict[str, int]
 
 class BeliefBase:
-    def __init__(self,
-        atoms: Atoms=dict(),
-        constraints: list[Sentence]=list(),
-    ) -> None:
+    def __init__(self, atoms: Atoms=dict(), constraints: List[Sentence]=list(),) -> None:
         # the atomic propositions
-        self.atoms: Atoms = atoms or dict()
+        self.atoms: Atoms = atoms
 
         # the standard logical operations
-        self.operations: dict[chr, callable[[bool, bool], bool]] = {
+        self.operations: Dict[chr, Callable[[bool, bool], bool]] = {
             "¬": lambda p: not p,
             "⇒": lambda p, q: (not p) or q,
             "⇔": lambda p, q: p == q,
@@ -71,7 +69,7 @@ class BeliefBase:
         # evaluate the truth value of a propositional sentence given an interpretation
         # of the atomic propositions, e.g., (1,0) on (p, q) yields false for 
         # 'p implies q'
-        stack: list[chr] = list()
+        stack: List[chr] = list()
         interp: Atoms = dict(zip(
             self.atoms.keys(), 
             interpretation
@@ -95,10 +93,10 @@ class BeliefBase:
         return stack[0]
     
 
-    def get_models(self) -> list[Interpretation]:
+    def get_models(self) -> List[Interpretation]:
         # compute all the combinations of truth-values for the atomic
         # propositions which satisfy the constraints
-        models: list[Interpretation] = list()
+        models: List[Interpretation] = list()
 
         for interp in product([0, 1], repeat=len(self.atoms)):
             if not self.constraints or self.evaluate_sentence(interp, self.constraints):
