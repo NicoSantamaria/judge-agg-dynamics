@@ -7,7 +7,9 @@ type Atoms = List[str]
 type Beliefs = Dict[str, int]
 
 class Agent:
-    def __init__(self, agenda: BeliefBase, beliefs: Beliefs=dict()) -> None:
+    def __init__(self, agenda: BeliefBase, beliefs: Beliefs=dict(), name: str="") -> None:
+        self.name = name
+
         # the agenda gives the atomic propositions and the logical constraints on the agent
         self.agenda: BeliefBase = agenda
 
@@ -47,17 +49,6 @@ class Agent:
     def update_beliefs(self, model: Interpretation) -> None:
         self.beliefs = {prop: value for prop, value in zip(self.beliefs.keys(), model)}
         self.models = self.get_models()
-
-    def __str__(self):
-        beliefs: List[str] = list()
-
-        for prop, value in self.beliefs.items():
-            if value == 1:
-                beliefs.append(prop)
-            else:
-                beliefs.append("not " + prop)
-
-        return f'The agent has the beliefs {beliefs} with the models {self.models}'
         
 # testing
 IC = BeliefBase(["p", "q", "r", "s"], [["iff", "r", "and", "p", "q"], ['iff', 's', 'not', 'or', 'p', 'r']])

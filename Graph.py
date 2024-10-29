@@ -79,14 +79,25 @@ class Graph:
 
         return res
     
+    def __str__(self):
+        result = "The graph contains the following agents and their models:\n"
+
+        for agent, connections in self.graph.items():
+            result += f"Agent {agent.name}:\n"
+
+            for connection in connections:
+                result += f"  Connected to: {connection.name}, Models: {connection.models}\n"
+
+        return result
     
 
+
 IC = BeliefBase(["p", "q", "r"], [["iff", "r", "implies", "p", "q"]])
-K1 = Agent(IC, {"p": 1, "q": 1, "r": 1})
-K2 = Agent(IC, {"p": 1, "q": 0, "r": 0})
-K3 = Agent(IC, {"p": 0, "q": 0, "r": 1})
+K1 = Agent(IC, {"p": 1, "q": 1, "r": 1}, "K1")
+K2 = Agent(IC, {"p": 1, "q": 0, "r": 0}, "K2")
+K3 = Agent(IC, {"p": 0, "q": 0, "r": 1}, "K3")
 G = Graph(IC, [K1, K2, K3])
 G.complete_graph()
 G.remove_connection(K1, K2)
 
-G.update(G.hamming_distance_rule, G.tiebreaker_chance)
+# G.update(G.hamming_distance_rule, G.tiebreaker_chance)
