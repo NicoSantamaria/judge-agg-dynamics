@@ -44,8 +44,8 @@ class Agent:
 
         return models
     
-    def update_beliefs(self, beliefs: Beliefs) -> None:
-        self.beliefs = beliefs
+    def update_beliefs(self, model: Interpretation) -> None:
+        self.beliefs = {prop: value for prop, value in zip(self.beliefs.keys(), model)}
         self.models = self.get_models()
 
     def __str__(self):
