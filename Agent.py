@@ -47,6 +47,17 @@ class Agent:
     def update_beliefs(self, beliefs: Beliefs) -> None:
         self.beliefs = beliefs
         self.models = self.get_models()
+
+    def __str__(self):
+        beliefs = List[str]
+
+        for prop, value in self.beliefs.items():
+            if value == 1:
+                beliefs.append(prop)
+            else:
+                beliefs.append("not " + prop)
+
+        return f'The agent has the beliefs {beliefs} with the models {self.models}'
         
 # testing
 IC = BeliefBase(["p", "q", "r", "s"], [["iff", "r", "and", "p", "q"], ['iff', 's', 'not', 'or', 'p', 'r']])
