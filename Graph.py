@@ -1,6 +1,7 @@
 from Agent import *
 from BeliefBase import *
 from typing import *
+import random
 
 type Connection = List[Tuple[int, Agent]]
 type GraphEdges = Dict[Agent, List[Connection]]
@@ -13,6 +14,11 @@ class Graph:
     def add_connections(self, agent: Agent, connections: list[Connection]) -> None:
         self.graph[agent] = connections 
 
+    def tiebreaker_chance(self, interps: List[Interpretation]) -> Interpretation:
+        return random.choice(interps)
+    
+    def hamming_distance_rule(self, agent: Agent) -> List[Interpretation]:
+        return []
 
 
 # testing
@@ -22,5 +28,5 @@ K2 = Agent(IC, {"p": 0, "q": 1, "r": 0, "s": 1})
 G = Graph(IC, [K1, K2])
 G.add_connections(K1, [K2])
 
-for connection in G.graph[K1]:
-    print(connection)
+# for connection in G.graph[K1]:
+#     print(connection)
