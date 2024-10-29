@@ -49,7 +49,7 @@ class Agent:
         self.models = self.get_models()
 
     def __str__(self):
-        beliefs = List[str]
+        beliefs: List[str] = list()
 
         for prop, value in self.beliefs.items():
             if value == 1:
