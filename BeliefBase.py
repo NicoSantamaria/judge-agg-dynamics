@@ -20,20 +20,22 @@ from typing import *
 
 type Sentence = List[str]
 type Interpretation = Tuple[int]
-type Atoms = Dict[str, int]
+type Atoms = List[str]
+type Beliefs = Dict[str, int]
 
 class BeliefBase:
-    def __init__(self, atoms: Atoms=dict(), constraints: List[Sentence]=list(),) -> None:
-        # the atomic propositions
-        self.atoms: Atoms = atoms
+    def __init__(self, atoms: Atoms, constraints: List[Sentence]=list(),) -> None:
+        # the atomic propositions with interpretations.
+        # -1 represents a "no judgment"
+        self.atoms: List[str] = atoms
 
         # the standard logical operations
         self.operations: Dict[chr, Callable[[bool, bool], bool]] = {
-            "¬": lambda p: not p,
-            "⇒": lambda p, q: (not p) or q,
-            "⇔": lambda p, q: p == q,
-            "∧": lambda p, q: p and q,
-            "∨": lambda p, q: p or q,
+            "not": lambda p: not p,
+            "implies": lambda p, q: (not p) or q,
+            "iff": lambda p, q: p == q,
+            "and": lambda p, q: p and q,
+            "or": lambda p, q: p or q,
         }
 
         # computes the set of logical constraints as a single conjunctive
@@ -62,7 +64,7 @@ class BeliefBase:
     
     def get_conjunction(self, sentence1: Sentence, sentence2: Sentence) -> Sentence:
         # represent the conjunction of two sentences in Polish Notation
-        return ["∧"] + sentence1 + sentence2
+        return ["and"] + sentence1 + sentence2
         
 
     def evaluate_sentence(self, interpretation: Interpretation, sentence: Sentence) -> bool:
@@ -70,8 +72,8 @@ class BeliefBase:
         # of the atomic propositions, e.g., (1,0) on (p, q) yields false for 
         # 'p implies q'
         stack: List[chr] = list()
-        interp: Atoms = dict(zip(
-            self.atoms.keys(), 
+        interp: Beliefs = dict(zip(
+            self.atoms, 
             interpretation
         ))
 
@@ -80,7 +82,7 @@ class BeliefBase:
             if char in self.operations.keys():
                 operation = self.operations[char]
 
-                if char == "¬":
+                if char == "not":
                     first = stack.pop()
                     stack.append(operation(first))
                 else:
@@ -106,5 +108,5 @@ class BeliefBase:
     
 
 # testing
-K = BeliefBase({"p": 1, "q": 1, "r": 1, "s": 1}, [["⇔", "r", "⇒", "p", "q"], ['⇔', 's', '⇒', 'p', 'q']])
+K = BeliefBase(["p", "q", "r", "s"], [["iff", "r", "implies", "p", "q"], ['iff', 's', 'and', 'p', 'q']])
 K.models

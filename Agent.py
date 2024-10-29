@@ -49,6 +49,6 @@ class Agent:
         self.models = self.get_models()
         
 # testing
-IC = BeliefBase(["p", "q", "r", "s"], [["⇔", "r", "⇒", "p", "q"], ['⇔', 's', '∧', 'p', 'q']])
+IC = BeliefBase(["p", "q", "r", "s"], [["iff", "r", "and", "p", "q"], ['iff', 's', 'not', 'or', 'p', 'r']])
 K = Agent(IC, {"p": 0, "q": 0, "r": -1, "s": 0})
 K.models
