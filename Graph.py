@@ -5,6 +5,8 @@ import random
 
 type Connection = List[Tuple[int, Agent]]
 type GraphEdges = Dict[Agent, List[Connection]]
+type UpdateRule = Callable[[Agent], List[Interpretation]]
+type TiebreakRule = Callable[[List[Interpretation]], Interpretation]
 
 class Graph:
     def __init__(self, agenda: BeliefBase, agents: list[Agent]=list()) -> None:
@@ -19,6 +21,11 @@ class Graph:
     
     def complete_graph(self) -> None:
         return
+
+    def update(self, update_rule: UpdateRule, tiebreaker: TiebreakRule) -> None:
+        for agent in self.graph:
+            model = tiebreaker(update_rule(agent))
+            agent.update_beliefs(model)
 
     def tiebreaker_chance(self, interps: List[Interpretation]) -> Interpretation:
         return random.choice(interps)
@@ -44,15 +51,26 @@ class Graph:
                 for agent_model in connection.models:
                     current_distance += self.hamming_distance(model, agent_model)
 
-            print(model, current_distance)
-
             if current_distance < candidate_minimum:
                 candidates = [model]
                 candidate_minimum = current_distance
             elif current_distance == candidate_minimum:
                 candidates.append(model)
 
-        return candidates
+        res: List[Interpretation] = list()
+        agent_minimum: int = candidate_minimum
+
+        for model in candidates:
+            for agent_model in agent.models:
+                current_distance: int = self.hamming_distance(model, agent_model)
+
+                if current_distance < agent_minimum:
+                    res = [model]
+                    agent_minimum = current_distance
+                elif current_distance == agent_minimum:
+                    res.append(model)
+
+        return res
 
 
 # testing
@@ -73,3 +91,5 @@ G = Graph(IC, [K1, K2, K3])
 G.add_connections(K1, [K1, K2, K3])
 G.add_connections(K2, [K1, K2, K3])
 G.add_connections(K3, [K1, K2, K3])
+
+G.update(G.hamming_distance_rule, G.tiebreaker_chance)
