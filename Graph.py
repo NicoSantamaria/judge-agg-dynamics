@@ -9,7 +9,7 @@ type GraphEdges = Dict[Agent, List[Connection]]
 class Graph:
     def __init__(self, agenda: BeliefBase, agents: list[Agent]=list()) -> None:
         self.agenda: BeliefBase = agenda
-        self.graph: GraphEdges = {agent: [] for agent in agents}
+        self.graph: GraphEdges = {agent: [agent] for agent in agents}
 
     def add_connections(self, agent: Agent, connections: list[Connection]) -> None:
         self.graph[agent] = connections 
@@ -17,8 +17,24 @@ class Graph:
     def tiebreaker_chance(self, interps: List[Interpretation]) -> Interpretation:
         return random.choice(interps)
     
-    def hamming_distance_rule(self, agent: Agent) -> List[Interpretation]:
-        return []
+    def hamming_distance(self, x: Interpretation, y: Interpretation) -> int:
+        count: int = 0
+
+        for a, b in zip(x, y):
+            if a != b:
+                count += 1
+
+        return count
+
+    
+    # def hamming_distance_rule(self, agent: Agent) -> List[Interpretation]:
+    #     candidates: List[Interpretation] = list()
+
+    #     for model in self.agenda.models:
+    #         for connection in self.graph[agent]:
+    #             break
+
+    #     return candidates
 
 
 # testing
