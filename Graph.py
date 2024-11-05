@@ -2,6 +2,7 @@ from Agent import *
 from BeliefBase import *
 from typing import *
 import random
+import copy
 
 type Connection = List[Tuple[int, Agent]]
 type GraphEdges = Dict[Agent, List[Connection]]
@@ -27,15 +28,21 @@ class Graph:
             self.add_connections(agent, list(self.graph.keys()))
 
 
-    def update(self, update_rule: UpdateRule, tiebreaker: TiebreakRule) -> None:
+    def update(self) -> None:
+        results = []
+
         for agent in self.graph:
-            model = tiebreaker(update_rule(agent))
-            agent.update_beliefs(model)
+            candidates = self.hamming_distance_rule(agent)
+            result = self.tiebreaker_chance(candidates)
+            results.append(result)
+
+        for i, agent in enumerate(self.graph):
+            agent.update_beliefs(results[i])
 
 
     def tiebreaker_chance(self, interps: List[Interpretation]) -> Interpretation:
         return random.choice(interps)
-    
+
 
     def hamming_distance(self, x: Interpretation, y: Interpretation) -> int:
         count: int = 0
@@ -49,7 +56,7 @@ class Graph:
 
     def hamming_distance_rule(self, agent: Agent) -> List[Interpretation]:
         candidates: List[Interpretation] = list()
-        candidate_minimum: int = len(self.agenda.atoms * len(self.graph))
+        candidate_minimum: int = len(self.agenda.atoms)
 
         for model in self.agenda.models:
             current_distance: int = 0
@@ -79,25 +86,14 @@ class Graph:
 
         return res
     
+    
     def __str__(self):
         result = "The graph contains the following agents and their models:\n"
 
         for agent, connections in self.graph.items():
-            result += f"Agent {agent.name}:\n"
+            result += f"Agent {agent.name} with models {agent.models}:\n"
 
             for connection in connections:
                 result += f"  Connected to: {connection.name}, Models: {connection.models}\n"
 
         return result
-    
-
-
-IC = BeliefBase(["p", "q", "r"], [["iff", "r", "implies", "p", "q"]])
-K1 = Agent(IC, {"p": 1, "q": 1, "r": 1}, "K1")
-K2 = Agent(IC, {"p": 1, "q": 0, "r": 0}, "K2")
-K3 = Agent(IC, {"p": 0, "q": 0, "r": 1}, "K3")
-G = Graph(IC, [K1, K2, K3])
-G.complete_graph()
-G.remove_connection(K1, K2)
-
-# G.update(G.hamming_distance_rule, G.tiebreaker_chance)
