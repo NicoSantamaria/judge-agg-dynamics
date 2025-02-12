@@ -56,14 +56,18 @@ class Graph:
 
     def hamming_distance_rule(self, agent: Agent) -> List[Interpretation]:
         candidates: List[Interpretation] = list()
-        candidate_minimum: int = len(self.agenda.atoms)
+        candidate_minimum: float = float('inf')
 
         for model in self.agenda.models:
+            # print(f"The current model is {model}")
             current_distance: int = 0
 
             for connection in self.graph[agent]:
                 for agent_model in connection.models:
-                    current_distance += self.hamming_distance(model, agent_model)
+                    distance_to_agent_model = self.hamming_distance(model, agent_model)
+                    # print(f"The distance from {model} to {agent_model} is {distance_to_agent_model}.")
+                    current_distance += distance_to_agent_model
+                    # print(f"The total distance for {model} is {current_distance}.")
 
             if current_distance < candidate_minimum:
                 candidates = [model]
@@ -71,20 +75,23 @@ class Graph:
             elif current_distance == candidate_minimum:
                 candidates.append(model)
 
-        res: List[Interpretation] = list()
-        agent_minimum: int = candidate_minimum
+            # print(f"The current list of models is: {candidates}")
 
-        for model in candidates:
-            for agent_model in agent.models:
-                current_distance: int = self.hamming_distance(model, agent_model)
+        # Commented out because we are now doing selection by random distribution
+        # res: List[Interpretation] = list()
+        # agent_minimum: int = candidate_minimum
 
-                if current_distance < agent_minimum:
-                    res = [model]
-                    agent_minimum = current_distance
-                elif current_distance == agent_minimum:
-                    res.append(model)
+        # for model in candidates:
+        #     for agent_model in agent.models:
+        #         current_distance: int = self.hamming_distance(model, agent_model)
 
-        return res
+        #         if current_distance < agent_minimum:
+        #             res = [model]
+        #             agent_minimum = current_distance
+        #         elif current_distance == agent_minimum:
+        #             res.append(model)
+
+        return candidates
     
     
     def __str__(self):
@@ -93,7 +100,19 @@ class Graph:
         for agent, connections in self.graph.items():
             result += f"Agent {agent.name} with models {agent.models}:\n"
 
-            for connection in connections:
-                result += f"  Connected to: {connection.name}, Models: {connection.models}\n"
+            # for connection in connections:
+            #     result += f"  Connected to: {connection.name}, Models: {connection.models}\n"
 
         return result
+    
+    def __eq__(self, other: 'Graph'):
+        self_models = set()
+        other_models = set()
+
+        for self_agent in self.graph:
+            self_models.add(self_agent.models[0])
+
+        for other_agent in other.graph:
+            other_models.add(other_agent.models[0])
+
+        return self_models == other_models
