@@ -125,22 +125,4 @@ if __name__ == "__main__":
         for agent in G.graph:
             results[agent.name][agent.models[0]] += 1
             
-
     print(results)
-    # for agent in results:
-    #     for model in agent:
-    #         print(f"{agent}: {model} -- {results[agent][model]}")
-        
-
-# I = BeliefBase(props, [['iff', 'r', 'implies', 'p', 'q']])
-# J1 = Agent(I, dict(zip(props, [1,0,0])), 'A')
-# J2 = Agent(I, dict(zip(props, [1,1,1])), 'B')
-# J3 = Agent(I, dict(zip(props, [0,0,1])), 'C')
-
-# G = Graph(I, [J1, J2, J3])
-# G.add_connections(J1, [J1, J2, J3])
-# G.add_connections(J2, [J1, J2])
-# G.add_connections(J3, [J3])
-
-# G.update()
-# print(G)
