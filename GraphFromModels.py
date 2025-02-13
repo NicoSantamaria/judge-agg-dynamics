@@ -42,11 +42,11 @@ class GraphFromModels:
         return random.choice(interps)
 
 
-    def hamming_distance(self, x: Interpretation, y: Interpretation) -> int:
+    def hamming_distance(self, vec1: Interpretation, vec2: Interpretation) -> int:
         count: int = 0
 
-        for a, b in zip(x, y):
-            if a != b:
+        for position1, position2 in zip(vec1, vec2):
+            if position1 != position2:
                 count += 1
 
         return count
@@ -82,18 +82,6 @@ class GraphFromModels:
                 result += f"  Connected to: {connection.name}, Models: {connection.model}\n"
 
         return result
-    
-    def __eq__(self, other: 'Graph'):
-        self_models = set()
-        other_models = set()
-
-        for self_agent in self.graph:
-            self_models.add(self_agent.models[0])
-
-        for other_agent in other.graph:
-            other_models.add(other_agent.models[0])
-
-        return self_models == other_models
     
 props = ['p', 'q', 'r']
 I = BeliefBase(props, [['iff', 'r', 'implies', 'p', 'q']])
