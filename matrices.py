@@ -18,8 +18,9 @@ class MarkovChain:
         self.agents: List[AgentFromModels] = list(graph.graph)
 
         self.adjacency = self._get_adjacency_matrix(self.agents, graph)
-        self.states: List[State] = self._generate_states(graph)
+        self.states: List[State] = self._generate_states(self.agents, graph)
         # self.state_graph_matrix: StateGraphMatrix = self.build_state_graph()
+
 
     @staticmethod
     def _get_adjacency_matrix(agents: List[AgentFromModels], graph: GraphFromModels) -> Matrix:
@@ -34,26 +35,25 @@ class MarkovChain:
                 if connection in graph.graph[agent]:
                     adjacency[i, j] = 1
 
+        """
+        may need the transpose
+        """
         return adjacency
 
+
     @staticmethod
-    def _generate_states(graph: GraphFromModels) -> List[State]:
-        # number of states can be easliy computed beforehand, so this can
-        # be improved by initializing the list and avoiding the append
-        # later on
-        states: List[GraphFromModels] = list()
-        
-        agents_perms = permutations(graph.graph)
-        models_combos = product(
-            graph.models, 
-            repeat=len(graph.graph)
-        )
-        
-        for agents, models in product(agents_perms, models_combos):
-            new_state: State = [(agent.name, model) 
-                for agent, model in zip(agents, models)
-            ]
-            states.append(new_state)
+    def _generate_states(agents: List[AgentFromModels], graph: GraphFromModels) -> List[Matrix]:
+        index: int = 0
+        length: int = len(graph.models) ** len(agents)
+        states: List[Matrix] = [None] * length
+
+        for combo in product(graph.models, repeat=len(agents)):
+            state: Matrix = np.matrix(combo)
+            """
+            may need the transpose again
+            """
+            states[index] = state
+            index += 1
 
         return states
     
