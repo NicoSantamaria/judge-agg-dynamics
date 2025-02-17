@@ -14,8 +14,25 @@ type State = List[Tuple[str, Interpretation]]
 class MarkovChain:
     def __init__(self, graph: GraphFromModels):
         self.graph: GraphFromModels = graph
+        self.agents: List[AgentFromModels] = list(graph.graph)
+
+        self.adjacency = self.get_adjacency_matrix()
         self.states: List[State] = self.generate_states()
-        self.state_graph_matrix: StateGraphMatrix = self.build_state_graph()
+        # self.state_graph_matrix: StateGraphMatrix = self.build_state_graph()
+
+    def get_adjacency_matrix(self) -> Matrix:
+        dim: int = len(self.agents)
+        adjacency: Matrix = np.zeros((dim, dim))
+
+        for i in range(dim):
+            for j in range(dim):
+                agent = self.agents[i]
+                connection = self.agents[j]
+
+                if connection in self.graph.graph[agent]:
+                    adjacency[i, j] = 1
+
+        return adjacency
 
     def generate_states(self) -> List[State]:
         # number of states can be easliy computed beforehand, so this can
@@ -40,10 +57,24 @@ class MarkovChain:
     def build_state_graph(self) -> StateGraphMatrix:
         length = len(self.states)
         state_graph_matrix = [[0] * length] * length
+        new_graph = deepcopy(self.graph)
 
         # iterate over the states
+        # NB: current approach is O(n^2). In theory, can be improved to 
+        # O(n) but would need to play around with the data structures;
+        # fine for now
         for i, state in enumerate(self.states):
-            print(state)
+            for graph_agent, state_agent in zip(new_graph.graph, state):
+                state_agent_name, state_agent_model = state_agent
+
+                print(graph_agent.name, graph_agent.model)
+                print(state_agent_name, state_agent_model)
+                print("")
+
+                if state_agent_name == graph_agent.name:
+                    graph_agent.update_beliefs(state_agent_model)
+                else:
+                    print("the order got messed up...")
 
         return state_graph_matrix
     
@@ -66,6 +97,8 @@ class MarkovChain:
                 candidates.append(candidate)
 
         return candidates
+    
+    
     
     
     def fast_exponent(self, mat: Matrix) -> Matrix:
