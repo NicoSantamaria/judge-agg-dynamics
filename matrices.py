@@ -7,6 +7,9 @@ from AgentFromModels import *
 from GraphFromModels import *
 from copy import deepcopy
 
+# comments:
+# 1. convert to matrices to np.ndarray for better performance
+
 type Matrix = np.ndarray
 type StateGraphMatrix = List[List[int]]
 type State = List[Tuple[str, Interpretation]]
@@ -32,7 +35,7 @@ class MarkovChain:
         for i, agent in enumerate(agents):
             for j, model in enumerate(np.transpose(model_matrix)):
                 if agent.model == tuple(model):
-                    coord_matrix[j][i] = 1
+                    coord_matrix[j, i] = 1
 
         return coord_matrix
 
@@ -61,20 +64,37 @@ class MarkovChain:
 
         for combo in product(graph.models, repeat=len(agents)):
             state: Matrix = np.matrix(combo)
-            """
-            may need the transpose again
-            """
+            # may need the transpose instead -- test
             states[index] = state
             index += 1
 
         return states
+
+    
+    @staticmethod
+    def model_distances(mat1: Matrix, mat2: Matrix) -> Matrix:
+        rows: int = mat1.shape[0]
+        cols: int = mat2.shape[1]
+        distance_matrix: Matrix = np.zeros((rows, cols))
+
+        for i, model1 in enumerate(mat1):
+            for j, model2 in enumerate(np.transpose(mat2)):
+                distance: int = 0
+
+                for pos1, pos2 in zip(tuple(model1), tuple(model2)):
+                    if pos1 != pos2:
+                        distance += 1
+
+                distance_matrix[i, j] = distance
+
+        return distance_matrix
     
 
     """
     work on this next
     """
     @staticmethod
-    def _matrix_update_rule():
+    def matrix_update_rule():
         return
     
 
@@ -157,3 +177,14 @@ G.add_connections(J2, [J1, J2])
 G.add_connections(J3, [J3])
 
 MC = MarkovChain(G)
+
+A = np.array([[0, 0, 1],
+              [1, 0, 0],
+              [0, 1, 1],
+              [1, 1, 1]])
+
+B = np.array([[1, 1, 0],
+              [0, 1, 0],
+              [0, 1, 1]])
+
+MC.model_distances(A, B)
