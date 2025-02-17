@@ -13,37 +13,40 @@ type State = List[Tuple[str, Interpretation]]
 
 class MarkovChain:
     def __init__(self, graph: GraphFromModels):
+        # can probably remove the self.graph ultimately...
         self.graph: GraphFromModels = graph
         self.agents: List[AgentFromModels] = list(graph.graph)
 
-        self.adjacency = self.get_adjacency_matrix()
-        self.states: List[State] = self.generate_states()
+        self.adjacency = self._get_adjacency_matrix(self.agents, graph)
+        self.states: List[State] = self._generate_states(graph)
         # self.state_graph_matrix: StateGraphMatrix = self.build_state_graph()
 
-    def get_adjacency_matrix(self) -> Matrix:
-        dim: int = len(self.agents)
+    @staticmethod
+    def _get_adjacency_matrix(agents: List[AgentFromModels], graph: GraphFromModels) -> Matrix:
+        dim: int = len(agents)
         adjacency: Matrix = np.zeros((dim, dim))
 
         for i in range(dim):
             for j in range(dim):
-                agent = self.agents[i]
-                connection = self.agents[j]
+                agent = agents[i]
+                connection = agents[j]
 
-                if connection in self.graph.graph[agent]:
+                if connection in graph.graph[agent]:
                     adjacency[i, j] = 1
 
         return adjacency
 
-    def generate_states(self) -> List[State]:
+    @staticmethod
+    def _generate_states(graph: GraphFromModels) -> List[State]:
         # number of states can be easliy computed beforehand, so this can
         # be improved by initializing the list and avoiding the append
         # later on
         states: List[GraphFromModels] = list()
         
-        agents_perms = permutations(self.graph.graph)
+        agents_perms = permutations(graph.graph)
         models_combos = product(
-            self.graph.models, 
-            repeat=len(self.graph.graph)
+            graph.models, 
+            repeat=len(graph.graph)
         )
         
         for agents, models in product(agents_perms, models_combos):
@@ -54,6 +57,7 @@ class MarkovChain:
 
         return states
     
+
     def build_state_graph(self) -> StateGraphMatrix:
         length = len(self.states)
         state_graph_matrix = [[0] * length] * length
@@ -78,6 +82,7 @@ class MarkovChain:
 
         return state_graph_matrix
     
+
     # works, as far as I can tell
     def hamming_distance_rule(self, models: List[Interpretation]) -> List[Interpretation]:
         candidates: List[Interpretation] = self.graph.models
@@ -97,8 +102,6 @@ class MarkovChain:
                 candidates.append(candidate)
 
         return candidates
-    
-    
     
     
     def fast_exponent(self, mat: Matrix) -> Matrix:
