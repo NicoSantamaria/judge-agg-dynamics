@@ -1,5 +1,5 @@
 import numpy as np
-from itertools import product, permutations
+from itertools import product
 from functools import reduce
 from Graph import *
 from typing import *
@@ -16,10 +16,25 @@ class MarkovChain:
         # can probably remove the self.graph ultimately...
         self.graph: GraphFromModels = graph
         self.agents: List[AgentFromModels] = list(graph.graph)
+        self.model_matrix: Matrix = np.matrix_transpose(graph.models)
 
+        self.coord_matrix: Matrix = self._get_coord_matrix(self.agents, self.model_matrix)
         self.adjacency = self._get_adjacency_matrix(self.agents, graph)
         self.states: List[State] = self._generate_states(self.agents, graph)
         # self.state_graph_matrix: StateGraphMatrix = self.build_state_graph()
+
+    @staticmethod
+    def _get_coord_matrix(agents: List[AgentFromModels], model_matrix: Matrix) -> Matrix:
+        rows: int = len(model_matrix[0])
+        cols: int = len(agents)
+        coord_matrix: Matrix = np.zeros((rows, cols))
+        
+        for i, agent in enumerate(agents):
+            for j, model in enumerate(np.transpose(model_matrix)):
+                if agent.model == tuple(model):
+                    coord_matrix[j][i] = 1
+
+        return coord_matrix
 
 
     @staticmethod
@@ -35,9 +50,6 @@ class MarkovChain:
                 if connection in graph.graph[agent]:
                     adjacency[i, j] = 1
 
-        """
-        may need the transpose
-        """
         return adjacency
 
 
@@ -56,6 +68,14 @@ class MarkovChain:
             index += 1
 
         return states
+    
+
+    """
+    work on this next
+    """
+    @staticmethod
+    def _matrix_update_rule():
+        return
     
 
     def build_state_graph(self) -> StateGraphMatrix:
