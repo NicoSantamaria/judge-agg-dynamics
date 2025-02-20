@@ -90,14 +90,23 @@ class MarkovChain:
         return distance_matrix
     
 
-    """
-    work on this next
-    """
     def matrix_update_rule(self) -> Matrix:
-        next_coord_matrix: Matrix = self.model_distances(
-            np.transpose(self.model_matrix), 
-            np.matmul(self.model_matrix, self.coord_matrix)
+        next_coord_matrix: Matrix = np.matmul(
+            self.model_distances(
+                np.transpose(self.model_matrix), 
+                np.matmul(self.model_matrix, self.coord_matrix)
+            ),
+            np.transpose(self.adjacency)
         )
+
+        for i, col in enumerate(np.transpose(next_coord_matrix)):
+            col_min: int = min(col)
+            
+            for j, entry in enumerate(col):
+                if entry == col_min:
+                    next_coord_matrix[j, i] = 1
+                else:
+                    next_coord_matrix[j, i] = 0
 
         return next_coord_matrix
     
@@ -181,6 +190,8 @@ G.add_connections(J2, [J1, J2])
 G.add_connections(J3, [J3])
 
 MC = MarkovChain(G)
+
+MC.matrix_update_rule()
 
 # A = np.array([[0, 0, 1],
 #               [1, 0, 0],
