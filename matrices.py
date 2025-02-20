@@ -93,9 +93,13 @@ class MarkovChain:
     """
     work on this next
     """
-    @staticmethod
-    def matrix_update_rule():
-        return
+    def matrix_update_rule(self) -> Matrix:
+        next_coord_matrix: Matrix = self.model_distances(
+            np.transpose(self.model_matrix), 
+            np.matmul(self.model_matrix, self.coord_matrix)
+        )
+
+        return next_coord_matrix
     
 
     def build_state_graph(self) -> StateGraphMatrix:
@@ -178,13 +182,13 @@ G.add_connections(J3, [J3])
 
 MC = MarkovChain(G)
 
-A = np.array([[0, 0, 1],
-              [1, 0, 0],
-              [0, 1, 1],
-              [1, 1, 1]])
+# A = np.array([[0, 0, 1],
+#               [1, 0, 0],
+#               [0, 1, 1],
+#               [1, 1, 1]])
 
-B = np.array([[1, 1, 0],
-              [0, 1, 0],
-              [0, 1, 1]])
+# B = np.array([[1, 1, 0],
+#               [0, 1, 0],
+#               [0, 1, 1]])
 
-MC.model_distances(A, B)
+# MC.model_distances(A, B)
