@@ -112,28 +112,7 @@ class MarkovChain:
     
 
     def build_state_graph(self) -> StateGraphMatrix:
-        length = len(self.states)
-        state_graph_matrix = [[0] * length] * length
-        new_graph = deepcopy(self.graph)
-
-        # iterate over the states
-        # NB: current approach is O(n^2). In theory, can be improved to 
-        # O(n) but would need to play around with the data structures;
-        # fine for now
-        for i, state in enumerate(self.states):
-            for graph_agent, state_agent in zip(new_graph.graph, state):
-                state_agent_name, state_agent_model = state_agent
-
-                print(graph_agent.name, graph_agent.model)
-                print(state_agent_name, state_agent_model)
-                print("")
-
-                if state_agent_name == graph_agent.name:
-                    graph_agent.update_beliefs(state_agent_model)
-                else:
-                    print("the order got messed up...")
-
-        return state_graph_matrix
+        return
     
 
     # works, as far as I can tell
