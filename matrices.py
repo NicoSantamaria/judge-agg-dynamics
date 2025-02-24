@@ -5,10 +5,6 @@ from Graph import *
 from typing import *
 from AgentFromModels import *
 from GraphFromModels import *
-from copy import deepcopy
-
-# comments:
-# 1. convert to matrices to np.ndarray for better performance
 
 type Matrix = np.ndarray
 type StateGraphMatrix = List[List[int]]
@@ -24,7 +20,7 @@ class MarkovChain:
         self.coord_matrix: Matrix = self._get_coord_matrix(self.agents, self.model_matrix)
         self.adjacency = self._get_adjacency_matrix(self.agents, graph)
         self.states: List[State] = self._generate_states(self.agents, graph)
-        # self.state_graph_matrix: StateGraphMatrix = self.build_state_graph()
+        self.state_graph_matrix: StateGraphMatrix = self._build_state_graph()
 
     @staticmethod
     def _get_coord_matrix(agents: List[AgentFromModels], model_matrix: Matrix) -> Matrix:
@@ -63,7 +59,7 @@ class MarkovChain:
         states: List[Matrix] = [None] * length
 
         for combo in product(graph.models, repeat=len(agents)):
-            state: Matrix = np.matrix(combo)
+            state: Matrix = np.array(combo)
             # may need the transpose instead -- test
             states[index] = state
             index += 1
@@ -73,7 +69,6 @@ class MarkovChain:
     
     @staticmethod
     def model_distances(mat1: Matrix, mat2: Matrix) -> Matrix:
-        # can do this in one line
         rows: int = mat1.shape[0]
         cols: int = mat2.shape[1]
         distance_matrix: Matrix = np.zeros((rows, cols))
@@ -140,7 +135,8 @@ class MarkovChain:
 
         return result_matrices
 
-    def build_state_graph(self) -> StateGraphMatrix:
+
+    def _build_state_graph(self) -> StateGraphMatrix:
         return
     
 
@@ -184,6 +180,7 @@ class MarkovChain:
 
         return stationary_distribution
     
+# testing
 props = ['p', 'q', 'r']
 I = BeliefBase(props, [['iff', 'r', 'implies', 'p', 'q']])
 
@@ -199,8 +196,10 @@ G.add_connections(J3, [J3])
 
 MC = MarkovChain(G)
 
-MC.matrix_update_rule()
+MC.state_graph_matrix
 
-next_coord_matrix = MC.matrix_update_rule()
+# MC.matrix_update_rule()
 
-MC._get_possible_states(next_coord_matrix)
+# next_coord_matrix = MC.matrix_update_rule()
+
+# MC._get_possible_states(next_coord_matrix)
