@@ -8,7 +8,6 @@ from GraphFromModels import *
 
 type Matrix = np.ndarray
 type StateGraphMatrix = List[List[int]]
-type State = List[Tuple[str, Interpretation]]
 
 class MarkovChain:
     def __init__(self, graph: GraphFromModels):
@@ -19,7 +18,7 @@ class MarkovChain:
 
         self.coord_matrix: Matrix = self._get_coord_matrix(self.agents, self.model_matrix)
         self.adjacency = self._get_adjacency_matrix(self.agents, graph)
-        self.states: List[State] = self._generate_states(self.agents, graph)
+        self.states: List[Matrix] = self._generate_states(self.agents, graph)
         self.state_graph_matrix: StateGraphMatrix = self._build_state_graph()
 
     @staticmethod
@@ -60,8 +59,7 @@ class MarkovChain:
 
         for combo in product(graph.models, repeat=len(agents)):
             state: Matrix = np.array(combo)
-            # may need the transpose instead -- test
-            states[index] = state
+            states[index] = np.transpose(state)
             index += 1
 
         return states
@@ -117,7 +115,7 @@ class MarkovChain:
         next_coord_matrix: Matrix = np.matmul(
             self.model_distances(
                 np.transpose(self.model_matrix), 
-                np.transpose(state)
+                state
             ),
             np.transpose(self.adjacency)
         )
@@ -158,20 +156,32 @@ class MarkovChain:
             for col, row in enumerate(combo):
                 new_matrix[row, col] = 1
 
-            result_matrices.append(np.matmul(self.model_matrix, new_matrix))
+            result_matrices.append(
+                np.matmul(self.model_matrix, new_matrix)
+            )
 
         return result_matrices
 
 
-    def _build_state_graph(self) -> StateGraphMatrix:
-        # dim: int = len(self.states)
-        # state_graph_matrix: Matrix = np.zeros((dim, dim))
+    # def _build_state_graph(self) -> StateGraphMatrix:
+    #     dim: int = len(self.states)
+    #     state_graph_matrix: Matrix = np.zeros((dim, dim))
 
-        # for state in self.states:
-        #     next_states = self._get_possible_states(
-        #         self.matrix_update_rule()
-        #     )
-        return
+    #     for i, state in enumerate(self.states):
+    #         next_states = self._get_possible_states(
+    #             self.update_from_state(state)
+    #         )
+
+    #         probability = 1 / len(next_states)
+
+    #         for j in range(dim):
+    #             possibility: bool = any(np.array_equal(self.states[j], next_state)
+    #                 for next_state in next_states)
+
+    #             if possibility:
+    #                 state_graph_matrix[i, j] = probability
+        
+    #     return np.transpose(state_graph_matrix)
     
 
     # works, as far as I can tell
