@@ -163,25 +163,29 @@ class MarkovChain:
         return result_matrices
 
 
-    # def _build_state_graph(self) -> StateGraphMatrix:
-    #     dim: int = len(self.states)
-    #     state_graph_matrix: Matrix = np.zeros((dim, dim))
+    def _build_state_graph(self) -> StateGraphMatrix:
+        dim: int = len(self.states)
+        state_graph_matrix: Matrix = np.zeros((dim, dim))
 
-    #     for i, state in enumerate(self.states):
-    #         next_states = self._get_possible_states(
-    #             self.update_from_state(state)
-    #         )
+        for i, state in enumerate(self.states):
+            next_states = self._get_possible_states(
+                self.update_from_state(state)
+            )
 
-    #         probability = 1 / len(next_states)
+            probability = 1 / len(next_states)
 
-    #         for j in range(dim):
-    #             possibility: bool = any(np.array_equal(self.states[j], next_state)
-    #                 for next_state in next_states)
+            for j in range(dim):
+                possibility: bool = False
 
-    #             if possibility:
-    #                 state_graph_matrix[i, j] = probability
+                for next_state in next_states:
+                    if np.array_equal(self.states[j], next_state):
+                        possibility = True
+
+                if possibility:
+                    print(i, j)
+                    state_graph_matrix[i, j] = probability
         
-    #     return np.transpose(state_graph_matrix)
+        return state_graph_matrix
     
 
     # works, as far as I can tell
@@ -240,9 +244,4 @@ G.add_connections(J3, [J3])
 
 MC = MarkovChain(G)
 
-
-MC.update_from_state(MC.states[0])
-
-# next_coord_matrix = MC.matrix_update_rule()
-
-# MC._get_possible_states(next_coord_matrix)
+MC.find_stationary(MC.state_graph_matrix)
