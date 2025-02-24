@@ -85,12 +85,39 @@ class MarkovChain:
 
         return distance_matrix
     
-
+    # obsolete
     def matrix_update_rule(self) -> Matrix:
         next_coord_matrix: Matrix = np.matmul(
             self.model_distances(
                 np.transpose(self.model_matrix), 
                 np.matmul(self.model_matrix, self.coord_matrix)
+            ),
+            np.transpose(self.adjacency)
+        )
+
+        print(
+            self.model_distances(
+                np.transpose(self.model_matrix), 
+                np.matmul(self.model_matrix, self.coord_matrix)
+            )
+        )
+
+        for i, col in enumerate(np.transpose(next_coord_matrix)):
+            col_min: int = min(col)
+            
+            for j, entry in enumerate(col):
+                if entry == col_min:
+                    next_coord_matrix[j, i] = 1
+                else:
+                    next_coord_matrix[j, i] = 0
+
+        return next_coord_matrix
+
+    def update_from_state(self, state: Matrix) -> Matrix:
+        next_coord_matrix: Matrix = np.matmul(
+            self.model_distances(
+                np.transpose(self.model_matrix), 
+                np.transpose(state)
             ),
             np.transpose(self.adjacency)
         )
@@ -137,6 +164,13 @@ class MarkovChain:
 
 
     def _build_state_graph(self) -> StateGraphMatrix:
+        # dim: int = len(self.states)
+        # state_graph_matrix: Matrix = np.zeros((dim, dim))
+
+        # for state in self.states:
+        #     next_states = self._get_possible_states(
+        #         self.matrix_update_rule()
+        #     )
         return
     
 
@@ -196,9 +230,8 @@ G.add_connections(J3, [J3])
 
 MC = MarkovChain(G)
 
-MC.state_graph_matrix
 
-# MC.matrix_update_rule()
+MC.update_from_state(MC.states[0])
 
 # next_coord_matrix = MC.matrix_update_rule()
 
