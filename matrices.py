@@ -83,33 +83,6 @@ class MarkovChain:
 
         return distance_matrix
     
-    # obsolete
-    def matrix_update_rule(self) -> Matrix:
-        next_coord_matrix: Matrix = np.matmul(
-            self.model_distances(
-                np.transpose(self.model_matrix), 
-                np.matmul(self.model_matrix, self.coord_matrix)
-            ),
-            np.transpose(self.adjacency)
-        )
-
-        print(
-            self.model_distances(
-                np.transpose(self.model_matrix), 
-                np.matmul(self.model_matrix, self.coord_matrix)
-            )
-        )
-
-        for i, col in enumerate(np.transpose(next_coord_matrix)):
-            col_min: int = min(col)
-            
-            for j, entry in enumerate(col):
-                if entry == col_min:
-                    next_coord_matrix[j, i] = 1
-                else:
-                    next_coord_matrix[j, i] = 0
-
-        return next_coord_matrix
 
     def update_from_state(self, state: Matrix) -> Matrix:
         next_coord_matrix: Matrix = np.matmul(
