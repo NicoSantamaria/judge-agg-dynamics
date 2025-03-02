@@ -7,7 +7,6 @@ from AgentFromModels import *
 from GraphFromModels import *
 
 type Matrix = np.ndarray
-type StateGraphMatrix = List[List[int]]
 
 class MarkovChain:
     def __init__(self, graph: GraphFromModels):
@@ -17,7 +16,8 @@ class MarkovChain:
         self.coord_matrix: Matrix = self._get_coord_matrix(self.agents, self.model_matrix)
         self.adjacency = self._get_adjacency_matrix(self.agents, graph)
         self.states: List[Matrix] = self._get_possible_states(np.ones(self.coord_matrix.shape))
-        self.state_graph_matrix: StateGraphMatrix = self._build_state_graph()
+        self.state_graph_matrix: Matrix = self._build_state_graph()
+        self.stationary: Matrix = self.find_stationary(self.state_graph_matrix)
 
 
     @staticmethod
@@ -122,7 +122,7 @@ class MarkovChain:
         return valid_arrays
 
 
-    def _build_state_graph(self) -> StateGraphMatrix:
+    def _build_state_graph(self) -> Matrix:
         dim: int = len(self.states)
         state_graph_matrix: Matrix = np.zeros((dim, dim))
 
@@ -142,12 +142,11 @@ class MarkovChain:
 
 
     def find_stationary(self, mat: Matrix) -> Matrix:
-        eigenvalues, eigenvectors = np.linalg.eig(mat)
-        stationary_index = np.where(np.isclose(eigenvalues, 1))[0][0]
-        stationary_distribution = eigenvectors[:, stationary_index]
-        stationary_distribution /= np.sum(stationary_distribution)
-
-        return stationary_distribution
+        stationary = np.linalg.matrix_power(mat, 1000)
+        stationary = np.where(
+            np.isclose(stationary, 0), 0, stationary
+        )
+        return stationary
     
 # testing
 props = ['p', 'q', 'r']
