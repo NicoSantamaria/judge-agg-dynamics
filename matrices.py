@@ -149,17 +149,17 @@ class MarkovChain:
         return stationary
     
 # testing
-props = ['p', 'q', 'r']
-I = BeliefBase(props, [['iff', 'r', 'implies', 'p', 'q']])
+# props = ['p', 'q', 'r']
+# I = BeliefBase(props, [['iff', 'r', 'implies', 'p', 'q']])
 
-J1 = AgentFromModels((1, 0, 0), 'A')
-J2 = AgentFromModels((1, 1, 1), 'B')
-J3 = AgentFromModels((0, 0, 1), 'C')
+# J1 = AgentFromModels((1, 0, 0), 'A')
+# J2 = AgentFromModels((1, 1, 1), 'B')
+# J3 = AgentFromModels((0, 0, 1), 'C')
 
-G = GraphFromModels(I.models, [J1, J2, J3])
+# G = GraphFromModels(I.models, [J1, J2, J3])
 
-G.add_connections(J1, [J1, J2, J3])
-G.add_connections(J2, [J1, J2])
-G.add_connections(J3, [J3])
+# G.add_connections(J1, [J1, J2, J3])
+# G.add_connections(J2, [J1, J2])
+# G.add_connections(J3, [J3])
 
-MC = MarkovChain(G)
+# MC = MarkovChain(G)
