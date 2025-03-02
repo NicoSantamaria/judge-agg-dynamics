@@ -18,8 +18,8 @@ class MarkovChain:
 
         self.coord_matrix: Matrix = self._get_coord_matrix(self.agents, self.model_matrix)
         self.adjacency = self._get_adjacency_matrix(self.agents, graph)
-        self.states: List[Matrix] = self._generate_states(self.agents, graph)
-        self.state_graph_matrix: StateGraphMatrix = self._build_state_graph()
+        # self.states: List[Matrix] = self._generate_states(self.agents, graph)
+        # self.state_graph_matrix: StateGraphMatrix = self._build_state_graph()
 
     @staticmethod
     def _get_coord_matrix(agents: List[AgentFromModels], model_matrix: Matrix) -> Matrix:
@@ -84,23 +84,31 @@ class MarkovChain:
         return distance_matrix
     
 
-    def update_from_state(self, state: Matrix) -> Matrix:
-        next_coord_matrix: Matrix = np.matmul(
+    def update_from_state(self, coord_matrix: Matrix) -> Matrix:
+        distances: Matrix = np.matmul(
             self.model_distances(
                 np.transpose(self.model_matrix), 
-                state
+                np.matmul(
+                    self.model_matrix,
+                    coord_matrix
+                )
             ),
             np.transpose(self.adjacency)
         )
 
-        for i, col in enumerate(np.transpose(next_coord_matrix)):
-            col_min: int = min(col)
-            
-            for j, entry in enumerate(col):
-                if entry == col_min:
-                    next_coord_matrix[j, i] = 1
-                else:
-                    next_coord_matrix[j, i] = 0
+        # Find minimum value in each column
+        min_vals = np.min(distances, axis=0)  # axis=0 means operate along columns
+
+        # Create a new array with the same shape as the original
+        # Fill with 1 where value equals the column minimum, 0 elsewhere
+        next_coord_matrix = np.zeros_like(distances)
+
+        # For each column
+        for col in range(distances.shape[1]):
+            # Create a boolean mask where the value equals the minimum for this column
+            min_mask = (distances[:, col] == min_vals[col])
+            # Set those positions to 1 in the result array
+            next_coord_matrix[:, col] = min_mask.astype(int)
 
         return next_coord_matrix
     
@@ -155,7 +163,6 @@ class MarkovChain:
                         possibility = True
 
                 if possibility:
-                    print(i, j)
                     state_graph_matrix[i, j] = probability
         
         return state_graph_matrix
@@ -181,15 +188,15 @@ class MarkovChain:
 
         return candidates
     
-    
-    def fast_exponent(self, mat: Matrix) -> Matrix:
+    @staticmethod
+    def fast_exponent(mat: Matrix, exp: int) -> Matrix:
         eigenvalues, eigenvectors = np.linalg.eig(mat)
         diagonal = np.diag(eigenvalues)
         trans_matrix_inv = np.linalg.inv(eigenvectors)
 
         return reduce(np.matmul, [
             eigenvectors, 
-            np.linalg.matrix_power(diagonal, 1000), 
+            np.linalg.matrix_power(diagonal, exp), 
             trans_matrix_inv
         ])
 
@@ -217,4 +224,4 @@ G.add_connections(J3, [J3])
 
 MC = MarkovChain(G)
 
-MC.find_stationary(MC.state_graph_matrix)
+MC.update_from_state(MC.coord_matrix)
