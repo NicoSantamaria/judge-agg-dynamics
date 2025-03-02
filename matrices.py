@@ -112,6 +112,7 @@ class MarkovChain:
 
         return next_coord_matrix
     
+    
     @staticmethod
     def _get_possible_states(next_coord_matrix: Matrix) -> List[Matrix]:
         # Get the positions where 1s are in the original array
