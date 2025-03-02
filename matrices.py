@@ -18,7 +18,7 @@ class MarkovChain:
 
         self.coord_matrix: Matrix = self._get_coord_matrix(self.agents, self.model_matrix)
         self.adjacency = self._get_adjacency_matrix(self.agents, graph)
-        # self.states: List[Matrix] = self._generate_states(self.agents, graph)
+        self.states: List[Matrix] = self._get_possible_states(np.ones(self.coord_matrix.shape))
         # self.state_graph_matrix: StateGraphMatrix = self._build_state_graph()
 
     @staticmethod
@@ -51,18 +51,18 @@ class MarkovChain:
         return adjacency
 
 
-    @staticmethod
-    def _generate_states(agents: List[AgentFromModels], graph: GraphFromModels) -> List[Matrix]:
-        index: int = 0
-        length: int = len(graph.models) ** len(agents)
-        states: List[Matrix] = [None] * length
+    # @staticmethod
+    # def _generate_states(agents: List[AgentFromModels], graph: GraphFromModels) -> List[Matrix]:
+    #     index: int = 0
+    #     length: int = len(graph.models) ** len(agents)
+    #     states: List[Matrix] = [None] * length
 
-        for combo in product(graph.models, repeat=len(agents)):
-            state: Matrix = np.array(combo)
-            states[index] = np.transpose(state)
-            index += 1
+    #     for combo in product(graph.models, repeat=len(agents)):
+    #         state: Matrix = np.array(combo)
+    #         states[index] = np.transpose(state)
+    #         index += 1
 
-        return states
+    #     return states
 
     
     @staticmethod
@@ -112,8 +112,8 @@ class MarkovChain:
 
         return next_coord_matrix
     
-
-    def _get_possible_states(self, next_coord_matrix: Matrix) -> List[Matrix]:
+    @staticmethod
+    def _get_possible_states(next_coord_matrix: Matrix) -> List[Matrix]:
         # Get the positions where 1s are in the original array
         ones_positions = []
         for col in range(next_coord_matrix.shape[1]):
