@@ -114,34 +114,26 @@ class MarkovChain:
     
 
     def _get_possible_states(self, next_coord_matrix: Matrix) -> List[Matrix]:
-        rows, cols = next_coord_matrix.shape
-        valid_positions = [[] for _ in range(cols)]
-
-        for col in range(cols):
-            for row in range(rows):
-                if next_coord_matrix[row, col] == 1:
-                    valid_positions[col].append(row)
-
-        # Remove empty columns (columns with no 1s)
-        valid_positions = [pos for pos in valid_positions if pos]
-
-        # Generate all possible combinations using itertools.product
-        all_combinations = product(*valid_positions)
-
-        # Convert each combination into a matrix
-        result_matrices = []
-
-        for combo in all_combinations:
-            new_matrix = np.zeros_like(next_coord_matrix)
-
+        # Get the positions where 1s are in the original array
+        ones_positions = []
+        for col in range(next_coord_matrix.shape[1]):
+            # Get the row indices where there are 1s in this column
+            rows_with_ones = np.where(next_coord_matrix[:, col] == 1.)[0]
+            ones_positions.append(rows_with_ones)
+        
+        # Generate all combinations using the cartesian product
+        valid_arrays = []
+        for combo in product(*ones_positions):
+            # Create a zero array of the same shape as original
+            new_arr = np.zeros_like(next_coord_matrix)
+            
+            # Place 1s at the selected positions
             for col, row in enumerate(combo):
-                new_matrix[row, col] = 1
-
-            result_matrices.append(
-                np.matmul(self.model_matrix, new_matrix)
-            )
-
-        return result_matrices
+                new_arr[row, col] = 1.
+                
+            valid_arrays.append(new_arr)
+        
+        return valid_arrays
 
 
     def _build_state_graph(self) -> StateGraphMatrix:
@@ -224,4 +216,4 @@ G.add_connections(J3, [J3])
 
 MC = MarkovChain(G)
 
-MC.update_from_state(MC.coord_matrix)
+MC._get_possible_states(MC.update_from_state(MC.coord_matrix))
