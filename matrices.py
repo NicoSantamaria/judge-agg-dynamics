@@ -11,15 +11,14 @@ type StateGraphMatrix = List[List[int]]
 
 class MarkovChain:
     def __init__(self, graph: GraphFromModels):
-        # can probably remove the self.graph ultimately...
-        self.graph: GraphFromModels = graph
         self.agents: List[AgentFromModels] = list(graph.graph)
         self.model_matrix: Matrix = np.matrix_transpose(graph.models)
 
         self.coord_matrix: Matrix = self._get_coord_matrix(self.agents, self.model_matrix)
         self.adjacency = self._get_adjacency_matrix(self.agents, graph)
         self.states: List[Matrix] = self._get_possible_states(np.ones(self.coord_matrix.shape))
-        # self.state_graph_matrix: StateGraphMatrix = self._build_state_graph()
+        self.state_graph_matrix: StateGraphMatrix = self._build_state_graph()
+
 
     @staticmethod
     def _get_coord_matrix(agents: List[AgentFromModels], model_matrix: Matrix) -> Matrix:
@@ -49,20 +48,6 @@ class MarkovChain:
                     adjacency[i, j] = 1
 
         return adjacency
-
-
-    # @staticmethod
-    # def _generate_states(agents: List[AgentFromModels], graph: GraphFromModels) -> List[Matrix]:
-    #     index: int = 0
-    #     length: int = len(graph.models) ** len(agents)
-    #     states: List[Matrix] = [None] * length
-
-    #     for combo in product(graph.models, repeat=len(agents)):
-    #         state: Matrix = np.array(combo)
-    #         states[index] = np.transpose(state)
-    #         index += 1
-
-    #     return states
 
     
     @staticmethod
@@ -112,7 +97,7 @@ class MarkovChain:
 
         return next_coord_matrix
     
-    
+
     @staticmethod
     def _get_possible_states(next_coord_matrix: Matrix) -> List[Matrix]:
         # Get the positions where 1s are in the original array
@@ -149,49 +134,12 @@ class MarkovChain:
             probability = 1 / len(next_states)
 
             for j in range(dim):
-                possibility: bool = False
-
                 for next_state in next_states:
                     if np.array_equal(self.states[j], next_state):
-                        possibility = True
-
-                if possibility:
-                    state_graph_matrix[i, j] = probability
+                        state_graph_matrix[i, j] = probability
         
         return state_graph_matrix
-    
 
-    # works, as far as I can tell
-    def hamming_distance_rule(self, models: List[Interpretation]) -> List[Interpretation]:
-        candidates: List[Interpretation] = self.graph.models
-        candidate_minimum: float = float('inf')
-
-        for candidate in candidates:
-            current_distance: int = 0
-
-            for model in models:
-                distance_to_model = self.graph.hamming_distance(candidate, model)
-                current_distance += distance_to_model
-
-            if current_distance < candidate_minimum:
-                candidates = [candidate]
-                candidate_minimum = current_distance
-            elif current_distance == candidate_minimum:
-                candidates.append(candidate)
-
-        return candidates
-    
-    @staticmethod
-    def fast_exponent(mat: Matrix, exp: int) -> Matrix:
-        eigenvalues, eigenvectors = np.linalg.eig(mat)
-        diagonal = np.diag(eigenvalues)
-        trans_matrix_inv = np.linalg.inv(eigenvectors)
-
-        return reduce(np.matmul, [
-            eigenvectors, 
-            np.linalg.matrix_power(diagonal, exp), 
-            trans_matrix_inv
-        ])
 
     def find_stationary(self, mat: Matrix) -> Matrix:
         eigenvalues, eigenvectors = np.linalg.eig(mat)
@@ -216,5 +164,3 @@ G.add_connections(J2, [J1, J2])
 G.add_connections(J3, [J3])
 
 MC = MarkovChain(G)
-
-MC._get_possible_states(MC.update_from_state(MC.coord_matrix))
