@@ -4,17 +4,17 @@ from typing import *
 from AgentFromModels import *
 
 type Models = List[Interpretation]
-type GraphFromModels = Dict[AgentFromModels, List[AgentFromModels]]
+type GraphFromModelsType = Dict[AgentFromModels, List[AgentFromModels]]
 
 class GraphFromModels:
     def __init__(self, models: Models, agents: List[AgentFromModels]) -> None:
         self.models: Models = models
-        self.graph: GraphFromModels = {agent: [] for agent in agents}
+        self.graph: GraphFromModelsType = {agent: [] for agent in agents}
 
 
     def add_connections(self, agent: AgentFromModels, connections: List[AgentFromModels]) -> None:
         self.graph[agent] = connections
-    
+
 
     def remove_connection(self, agent: AgentFromModels, connections: List[AgentFromModels]) -> None:
         for connection in connections:
@@ -50,7 +50,7 @@ class GraphFromModels:
                 count += 1
 
         return count
-    
+
     # works
     def hamming_distance_rule(self, agent: AgentFromModels) -> List[Interpretation]:
         candidates: List[Interpretation] = list()
@@ -70,8 +70,8 @@ class GraphFromModels:
                 candidates.append(model)
 
         return candidates
-    
-    
+
+
     def __str__(self):
         result = "The graph contains the following agents and their models:\n"
 
@@ -82,4 +82,3 @@ class GraphFromModels:
                 result += f"  Connected to: {connection.name}, Models: {connection.model}\n"
 
         return result
-    
