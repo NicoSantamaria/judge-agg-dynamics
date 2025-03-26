@@ -1,5 +1,4 @@
-from BeliefBase import *
-from typing import *
+from BeliefBase import Interpretation
 
 
 class AgentFromModels:

@@ -5,10 +5,10 @@ This class represents belief systems as a set of propositional
 sentences under standard logic. Given a number of atomic propositions
 and logic constraints on those propositions, the class computes
 every combination of truth values that render the given belief system
-true with the respect to the constraints. 
+true with the respect to the constraints.
 
 Using the parlance of judgment aggregation theory, the class computes
-every possible consistent judgment set on a given agenda. 
+every possible consistent judgment set on a given agenda.
 
 Logical sentences are understood in Polish notation:
 
@@ -16,7 +16,7 @@ Logical sentences are understood in Polish notation:
 """
 
 from itertools import product
-from typing import *
+from typing import List, Tuple, Dict, Callable
 
 type Sentence = List[str]
 type Interpretation = Tuple[int]
@@ -30,7 +30,7 @@ class BeliefBase:
         self.atoms: List[str] = atoms
 
         # the standard logical operations
-        self.operations: Dict[chr, Callable[[bool, bool], bool]] = {
+        self.operations: Dict[str, Callable] = {
             "not": lambda p: not p,
             "implies": lambda p, q: (not p) or q,
             "iff": lambda p, q: p == q,
@@ -48,10 +48,10 @@ class BeliefBase:
 
     def get_constraints(self, constraints: list[Sentence]) -> Sentence:
         # build the single conjunctive sentence from the list of
-        # given constraints. 
+        # given constraints.
         if not constraints:
             return list()
-        
+
         constraint_sentence: Sentence = constraints[0]
 
         for sentence in constraints[1:]:
@@ -61,19 +61,19 @@ class BeliefBase:
             )
 
         return constraint_sentence
-    
+
     def get_conjunction(self, sentence1: Sentence, sentence2: Sentence) -> Sentence:
         # represent the conjunction of two sentences in Polish Notation
         return ["and"] + sentence1 + sentence2
-        
+
 
     def evaluate_sentence(self, interpretation: Interpretation, sentence: Sentence) -> bool:
         # evaluate the truth value of a propositional sentence given an interpretation
-        # of the atomic propositions, e.g., (1,0) on (p, q) yields false for 
+        # of the atomic propositions, e.g., (1,0) on (p, q) yields false for
         # 'p implies q'
-        stack: List[chr] = list()
+        stack: List[str] = list()
         interp: Beliefs = dict(zip(
-            self.atoms, 
+            self.atoms,
             interpretation
         ))
 
@@ -93,7 +93,7 @@ class BeliefBase:
                 stack.append(interp[char])
 
         return stack[0]
-    
+
 
     def get_models(self) -> List[Interpretation]:
         # compute all the combinations of truth-values for the atomic
@@ -105,8 +105,3 @@ class BeliefBase:
                 models.append(interp)
 
         return models
-    
-
-# testing
-K = BeliefBase(["p", "q", "r", "s"], [["iff", "r", "implies", "p", "q"], ['iff', 's', 'and', 'p', 'q']])
-K.models

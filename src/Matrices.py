@@ -1,10 +1,8 @@
 import numpy as np
 from itertools import product
-from functools import reduce
-from Graph import *
-from typing import *
-from AgentFromModels import *
-from GraphFromModels import *
+from typing import List
+from AgentFromModels import AgentFromModels
+from GraphFromModels import GraphFromModels
 
 type Matrix = np.ndarray
 
@@ -25,7 +23,7 @@ class MarkovChain:
         rows: int = len(model_matrix[0])
         cols: int = len(agents)
         coord_matrix: Matrix = np.zeros((rows, cols))
-        
+
         for i, agent in enumerate(agents):
             for j, model in enumerate(np.transpose(model_matrix)):
                 if agent.model == tuple(model):
@@ -49,7 +47,7 @@ class MarkovChain:
 
         return adjacency
 
-    
+
     @staticmethod
     def model_distances(mat1: Matrix, mat2: Matrix) -> Matrix:
         rows: int = mat1.shape[0]
@@ -67,12 +65,12 @@ class MarkovChain:
                 distance_matrix[i, j] = distance
 
         return distance_matrix
-    
+
 
     def update_from_state(self, coord_matrix: Matrix) -> Matrix:
         distances: Matrix = np.matmul(
             self.model_distances(
-                np.transpose(self.model_matrix), 
+                np.transpose(self.model_matrix),
                 np.matmul(
                     self.model_matrix,
                     coord_matrix
@@ -96,7 +94,7 @@ class MarkovChain:
             next_coord_matrix[:, col] = min_mask.astype(int)
 
         return next_coord_matrix
-    
+
 
     @staticmethod
     def _get_possible_states(next_coord_matrix: Matrix) -> List[Matrix]:
@@ -106,19 +104,19 @@ class MarkovChain:
             # Get the row indices where there are 1s in this column
             rows_with_ones = np.where(next_coord_matrix[:, col] == 1.)[0]
             ones_positions.append(rows_with_ones)
-        
+
         # Generate all combinations using the cartesian product
         valid_arrays = []
         for combo in product(*ones_positions):
             # Create a zero array of the same shape as original
             new_arr = np.zeros_like(next_coord_matrix)
-            
+
             # Place 1s at the selected positions
             for col, row in enumerate(combo):
                 new_arr[row, col] = 1.
-                
+
             valid_arrays.append(new_arr)
-        
+
         return valid_arrays
 
 
@@ -137,7 +135,7 @@ class MarkovChain:
                 for next_state in next_states:
                     if np.array_equal(self.states[j], next_state):
                         state_graph_matrix[i, j] = probability
-        
+
         return state_graph_matrix
 
 
@@ -147,19 +145,3 @@ class MarkovChain:
             np.isclose(stationary, 0), 0, stationary
         )
         return stationary
-    
-# testing
-# props = ['p', 'q', 'r']
-# I = BeliefBase(props, [['iff', 'r', 'implies', 'p', 'q']])
-
-# J1 = AgentFromModels((1, 0, 0), 'A')
-# J2 = AgentFromModels((1, 1, 1), 'B')
-# J3 = AgentFromModels((0, 0, 1), 'C')
-
-# G = GraphFromModels(I.models, [J1, J2, J3])
-
-# G.add_connections(J1, [J1, J2, J3])
-# G.add_connections(J2, [J1, J2])
-# G.add_connections(J3, [J3])
-
-# MC = MarkovChain(G)

@@ -1,7 +1,7 @@
 import random
-from BeliefBase import *
-from typing import *
-from AgentFromModels import *
+from BeliefBase import Interpretation
+from typing import List, Dict
+from AgentFromModels import AgentFromModels
 
 type Models = List[Interpretation]
 type GraphFromModelsType = Dict[AgentFromModels, List[AgentFromModels]]
