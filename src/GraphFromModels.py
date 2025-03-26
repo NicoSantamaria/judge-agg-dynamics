@@ -2,6 +2,7 @@ import random
 from BeliefBase import Interpretation
 from typing import List, Dict
 from AgentFromModels import AgentFromModels
+from utils.utils import hamming_distance
 
 type Models = List[Interpretation]
 type GraphFromModelsType = Dict[AgentFromModels, List[AgentFromModels]]
@@ -38,20 +39,6 @@ class GraphFromModels:
             agent.update_beliefs(results[i])
 
 
-    def tiebreaker_chance(self, interps: List[Interpretation]) -> Interpretation:
-        return random.choice(interps)
-
-
-    def hamming_distance(self, vec1: Interpretation, vec2: Interpretation) -> int:
-        count: int = 0
-
-        for position1, position2 in zip(vec1, vec2):
-            if position1 != position2:
-                count += 1
-
-        return count
-
-    # works
     def hamming_distance_rule(self, agent: AgentFromModels) -> List[Interpretation]:
         candidates: List[Interpretation] = list()
         candidate_minimum: float = float('inf')
@@ -60,7 +47,7 @@ class GraphFromModels:
             current_distance: int = 0
 
             for connection in self.graph[agent]:
-                distance_to_agent_model = self.hamming_distance(model, connection.model)
+                distance_to_agent_model = hamming_distance(model, connection.model)
                 current_distance += distance_to_agent_model
 
             if current_distance < candidate_minimum:
@@ -70,6 +57,10 @@ class GraphFromModels:
                 candidates.append(model)
 
         return candidates
+
+
+    def tiebreaker_chance(self, interps: List[Interpretation]) -> Interpretation:
+        return random.choice(interps)
 
 
     def __str__(self):
