@@ -58,6 +58,7 @@ class MarkovChain:
             for j, model2 in enumerate(np.transpose(mat2)):
                 distance: int = 0
 
+                # replace with utils hamming_distance
                 for pos1, pos2 in zip(tuple(model1), tuple(model2)):
                     if pos1 != pos2:
                         distance += 1
