@@ -14,6 +14,8 @@ def evaluate_sentence(atoms: List[Prop], interpretation: Interpretation, sentenc
         raise ValueError("Empty atoms or interpretation not allowed.")
     if len(atoms) != len(interpretation):
         raise ValueError("The length of the interpretation is not equal to the number of atomic propositions.")
+    if sentence == []:
+        return True
 
     stack: List[Z2] = list()
     interp: Beliefs = dict(zip(
