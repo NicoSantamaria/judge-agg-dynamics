@@ -11,6 +11,20 @@ def hamming_distance(vec1: Interpretation, vec2: Interpretation) -> int:
 def ints_to_interpretation(nums: List[int]) -> Interpretation:
     return [Z2(a % 2) for a in nums]
 
+def strs_to_sentence(strs: List[str]) -> Sentence:
+    def symbol_to_enum(symbol: str) -> Prop | Logic:
+        try:
+            res = Prop(symbol)
+            return res
+        except ValueError:
+            try:
+                res = Logic(symbol)
+                return res
+            except ValueError:
+                raise ValueError("Symbol is neither a valid Prop nor Logic.")
+
+    return [symbol_to_enum(symbol) for symbol in strs]
+
 def use_operation(symbol: Logic, *args: Z2) -> Z2:
     operations = {
         Logic.NOT: lambda p: not p,
