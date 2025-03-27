@@ -31,6 +31,12 @@ class Z2(Enum):
     def __sub__(self, other: 'Z2') -> 'Z2':
         return self + other
 
+    def __bool__(self) -> bool:
+        if self == Z2.ZERO:
+            return False
+        else:
+            return True
+
     def inverse(self) -> 'Z2':
         if self == Z2.ZERO:
             raise ValueError("Zero has no multiplicative inverse")
@@ -44,6 +50,16 @@ class Logic(Enum):
     NOT = "~"
     AND = "&"
     OR = "|"
+
+    def __call__(self, *args: Z2) -> Z2:
+        operations = {
+            Logic.NOT: lambda p: not p,
+            Logic.IMPLIES: lambda p, q: (not p) or q,
+            Logic.AND: lambda p, q: p and q,
+            Logic.OR: lambda p, q: p or q,
+        }
+
+        return operations[self](*args)
 
 class Prop(Enum):
     P = "p"

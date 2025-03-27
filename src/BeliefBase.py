@@ -1,16 +1,14 @@
 from itertools import product
 from typing import List, Dict, Callable
+from utils.enums import Z2, Prop, Logic
+from utils.types import Sentence
 
-type Sentence = List[str]
-type Interpretation = List[int]
-type Atoms = List[str]
-type Beliefs = Dict[str, int]
 
 class BeliefBase:
-    def __init__(self, atoms: Atoms, constraints: List[Sentence]=list(),) -> None:
+    def __init__(self, atoms: List[Prop], constraints: List[Sentence]=list(),) -> None:
         # the atomic propositions with interpretations.
         # -1 represents a "no judgment"
-        self.atoms: List[str] = atoms
+        self.atoms: List[Prop] = atoms
 
         # the standard logical operations
         self.operations: Dict[str, Callable] = {

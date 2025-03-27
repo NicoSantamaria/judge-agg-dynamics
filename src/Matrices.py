@@ -4,7 +4,7 @@ from typing import List
 from AgentFromModels import AgentFromModels
 from GraphFromModels import GraphFromModels
 
-type Matrix = np.ndarray
+
 
 class MarkovChain:
     def __init__(self, graph: GraphFromModels):

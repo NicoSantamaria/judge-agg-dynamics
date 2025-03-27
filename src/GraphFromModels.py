@@ -1,11 +1,8 @@
 import random
 from BeliefBase import Interpretation
-from typing import List, Dict
 from AgentFromModels import AgentFromModels
 from utils.utils import hamming_distance
 
-type Models = List[Interpretation]
-type GraphFromModelsType = Dict[AgentFromModels, List[AgentFromModels]]
 
 class GraphFromModels:
     def __init__(self, models: Models, agents: List[AgentFromModels]) -> None:
