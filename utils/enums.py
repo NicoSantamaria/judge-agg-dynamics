@@ -79,3 +79,14 @@ class Prop(Enum):
     X = "x"
     Y = "y"
     Z = "z"
+
+    def __new__(cls, value: str):
+        obj = object.__new__(cls)
+        obj._value_ = value
+        return obj
+
+    @classmethod
+    def _missing_(cls, value):
+        if isinstance(value, str):
+            raise ValueError(f"{value} not a valid value in Prop.")
+        raise ValueError("Prop values must be of type str.")
