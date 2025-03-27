@@ -45,7 +45,7 @@ class Logic(Enum):
     AND = "&"
     OR = "|"
 
-class Proposition(Enum):
+class Prop(Enum):
     P = "p"
     Q = "q"
     R = "r"
