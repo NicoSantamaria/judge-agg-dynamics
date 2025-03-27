@@ -5,9 +5,9 @@ class Z2(Enum):
     ZERO = 0
     ONE = 1
 
-    def __new__(cls, value):
+    def __new__(cls, value: int):
         obj = object.__new__(cls)
-        obj._value_ = value
+        obj._value_ = value % 2
         return obj
 
     @classmethod
