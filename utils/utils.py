@@ -11,6 +11,17 @@ def hamming_distance(vec1: Interpretation, vec2: Interpretation) -> int:
 def ints_to_interpretation(nums: List[int]) -> Interpretation:
     return [Z2(a % 2) for a in nums]
 
+def use_operation(symbol: Logic, *args: Z2) -> Z2:
+    operations = {
+        Logic.NOT: lambda p: not p,
+        Logic.IMPLIES: lambda p, q: (not p) or q,
+        Logic.AND: lambda p, q: p and q,
+        Logic.OR: lambda p, q: p or q,
+        Logic.IFF: lambda p, q: p == q
+    }
+
+    return operations[symbol](*args)
+
 def evaluate_sentence(atoms: List[Prop], interpretation: Interpretation, sentence: Sentence) -> bool:
     if len(atoms) == 0 or len(interpretation) == 0:
         raise ValueError("Empty atoms or interpretation not allowed.")
@@ -25,16 +36,16 @@ def evaluate_sentence(atoms: List[Prop], interpretation: Interpretation, sentenc
         interpretation
     ))
 
-    for char in reversed(sentence):
-        if isinstance(char, Logic):
-            if char == Logic.NOT:
+    for symbol in reversed(sentence):
+        if isinstance(symbol, Logic):
+            if symbol == Logic.NOT:
                 first = stack.pop()
-                stack.append(char(first))
+                stack.append(use_operation(symbol, first))
             else:
                 second = stack.pop()
                 first = stack.pop()
-                stack.append(char(second, first))
+                stack.append(use_operation(symbol, second, first))
         else:
-            stack.append(interp[char])
+            stack.append(interp[symbol])
 
     return bool(stack[0])

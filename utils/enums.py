@@ -52,16 +52,6 @@ class Logic(Enum):
     OR = "|"
     IFF = "<->"
 
-    def __call__(self, *args: Z2) -> Z2:
-        operations = {
-            Logic.NOT: lambda p: not p,
-            Logic.IMPLIES: lambda p, q: (not p) or q,
-            Logic.AND: lambda p, q: p and q,
-            Logic.OR: lambda p, q: p or q,
-            Logic.IFF: lambda p, q: p == q
-        }
-
-        return operations[self](*args)
 
 class Prop(Enum):
     P = "p"
