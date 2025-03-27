@@ -1,9 +1,23 @@
-from enum import Enum
+from enum import Enum, auto
 
 
 class Z2(Enum):
     ZERO = 0
     ONE = 1
+
+    def __new__(cls, value):
+        obj = object.__new__(cls)
+        obj._value_ = value
+        return obj
+
+    @classmethod
+    def __call__(cls, value):
+        if value == 0:
+            return cls.ZERO
+        elif value == 1:
+            return cls.ONE
+        else:
+            raise ValueError(f"{value} not valid in Z2.")
 
     def __add__(self, other: 'Z2') -> 'Z2':
         return Z2(self.value ^ other.value)
