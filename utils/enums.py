@@ -49,6 +49,23 @@ class Logic(Enum):
     OR = "|"
     IFF = "<->"
 
+    def __new__(cls, value: str):
+        obj = object.__new__(cls)
+        obj._value_ = value
+        return obj
+
+    @classmethod
+    def _missing_(cls, value):
+        if isinstance(value, str):
+            raise ValueError(f"{value} not a valid value in Logic.")
+        raise ValueError("Logic values must be of type str.")
+
+    @classmethod
+    def __call__(cls, value: str):
+        for member in cls:
+            if member.value == value:
+                return member
+
 
 class Prop(Enum):
     P = "p"
