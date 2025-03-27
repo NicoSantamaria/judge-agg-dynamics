@@ -1,5 +1,5 @@
 from src.BeliefBase import BeliefBase
-from utils.types import Logic, Prop, Z2
+from utils.enums import Logic, Prop, Z2
 
 def test_get_constraints():
     K = BeliefBase([Prop.P, Prop.Q], [])
