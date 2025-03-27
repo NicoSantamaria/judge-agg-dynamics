@@ -1,6 +1,6 @@
 from typing import List, Dict
 from numpy import ndarray
-from enums import Z2, Logic, Proposition
+from utils.enums import Z2, Logic, Proposition
 
 type Interpretation = List[Z2]
 type Sentence = List[Logic | Proposition]

@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Z2(Enum):
     ZERO = 0
     ONE = 1

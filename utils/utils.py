@@ -1,12 +1,9 @@
-from typing import List
-from src.BeliefBase import Interpretation
+from .types import Interpretation
 
-def hamming_distance(vec1: List[int], vec2: List[int]) -> int:
-    count: int = 0
-    for position1, position2 in zip(vec1, vec2):
-        if position1 != position2:
-            count += 1
-    return count
+
+def hamming_distance(vec1: Interpretation, vec2: Interpretation) -> int:
+    return sum((a.value ^ b.value) for a, b in zip(vec1, vec2))
+
 
 # def model_from_interpretation(interp: Interpretation) -> List[int]:
 #     return []
