@@ -8,6 +8,8 @@ def hamming_distance(vec1: Interpretation, vec2: Interpretation) -> int:
         raise ValueError("List lengths are not equal.")
     return sum((a.value ^ b.value) for a, b in zip(vec1, vec2))
 
+def ints_to_interpretation(nums: List[int]) -> Interpretation:
+    return [Z2(a % 2) for a in nums]
 
 def evaluate_sentence(atoms: List[Prop], interpretation: Interpretation, sentence: Sentence) -> bool:
     if len(atoms) == 0 or len(interpretation) == 0:
