@@ -3,7 +3,7 @@ from BeliefBase import Interpretation
 from AgentFromModels import AgentFromModels
 from utils.utils import hamming_distance
 
-
+# THIS IS NEXT
 class GraphFromModels:
     def __init__(self, models: Models, agents: List[AgentFromModels]) -> None:
         self.models: Models = models
