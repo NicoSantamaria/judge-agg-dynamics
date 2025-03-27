@@ -17,6 +17,9 @@ def test_hamming_distance():
 def test_evaluate_sentence():
     assert evaluate_sentence([Prop.P], [Z2(0)], []) == True
     assert evaluate_sentence([Prop.P, Prop.Q], [Z2(1), Z2(0)], []) == True
+    assert evaluate_sentence([Prop.P, Prop.Q], [Z2(1), Z2(0)], [Logic.IFF, Prop.P, Prop.Q]) == False
+    assert evaluate_sentence([Prop.P, Prop.Q], [Z2(1), Z2(1)], [Logic.IFF, Prop.P, Prop.Q]) == True
+    assert evaluate_sentence([Prop.P, Prop.Q], [Z2(0), Z2(0)], [Logic.IFF, Prop.P, Prop.Q]) == True
     assert evaluate_sentence([Prop.P, Prop.Q, Prop.R], [Z2(1), Z2(0), Z2(1)], [Logic.AND, Prop.P, Prop.Q]) == False
     assert evaluate_sentence([Prop.P, Prop.Q, Prop.R], [Z2(1), Z2(1), Z2(1)], [Logic.AND, Prop.P, Prop.Q]) == True
     assert evaluate_sentence([Prop.P, Prop.Q, Prop.R], [Z2(1), Z2(1), Z2(1)], [Logic.AND, Logic.NOT, Prop.P, Prop.Q]) == False

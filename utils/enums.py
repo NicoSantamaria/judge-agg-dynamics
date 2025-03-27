@@ -46,10 +46,11 @@ class Z2(Enum):
         return f"{self}"
 
 class Logic(Enum):
-    IMPLIES = ">"
+    IMPLIES = "->"
     NOT = "~"
     AND = "&"
     OR = "|"
+    IFF = "<->"
 
     def __call__(self, *args: Z2) -> Z2:
         operations = {
@@ -57,6 +58,7 @@ class Logic(Enum):
             Logic.IMPLIES: lambda p, q: (not p) or q,
             Logic.AND: lambda p, q: p and q,
             Logic.OR: lambda p, q: p or q,
+            Logic.IFF: lambda p, q: p == q
         }
 
         return operations[self](*args)
