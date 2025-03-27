@@ -1,25 +1,8 @@
-"""
-Belief Base
-
-This class represents belief systems as a set of propositional
-sentences under standard logic. Given a number of atomic propositions
-and logic constraints on those propositions, the class computes
-every combination of truth values that render the given belief system
-true with the respect to the constraints.
-
-Using the parlance of judgment aggregation theory, the class computes
-every possible consistent judgment set on a given agenda.
-
-Logical sentences are understood in Polish notation:
-
-['implies', 'p', 'q'] yields 'p implies q'
-"""
-
 from itertools import product
-from typing import List, Tuple, Dict, Callable
+from typing import List, Dict, Callable
 
 type Sentence = List[str]
-type Interpretation = Tuple[int]
+type Interpretation = List[int]
 type Atoms = List[str]
 type Beliefs = Dict[str, int]
 
