@@ -7,7 +7,7 @@ class Z2(Enum):
 
     def __new__(cls, value: int):
         obj = object.__new__(cls)
-        obj._value_ = value % 2
+        obj._value_ = value
         return obj
 
     @classmethod
