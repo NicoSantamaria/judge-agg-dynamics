@@ -10,6 +10,11 @@ def hamming_distance(vec1: Interpretation, vec2: Interpretation) -> int:
 
 
 def evaluate_sentence(atoms: List[Prop], interpretation: Interpretation, sentence: Sentence) -> bool:
+    if len(atoms) == 0 or len(interpretation) == 0:
+        raise ValueError("Empty atoms or interpretation not allowed.")
+    if len(atoms) != len(interpretation):
+        raise ValueError("The length of the interpretation is not equal to the number of atomic propositions.")
+
     stack: List[Z2] = list()
     interp: Beliefs = dict(zip(
         atoms,
