@@ -6,12 +6,20 @@ class Z2(Enum):
     ONE = 1
 
     def __new__(cls, value: int):
+        value %= 2
         obj = object.__new__(cls)
         obj._value_ = value
         return obj
 
     @classmethod
-    def __call__(cls, value):
+    def _missing_(cls, value):
+        if isinstance(value, int):
+            return cls(value % 2)
+        raise ValueError("Z2 values must be of type int.")
+
+    @classmethod
+    def __call__(cls, value: int):
+        value %= 2
         if value == 0:
             return cls.ZERO
         elif value == 1:
@@ -25,22 +33,11 @@ class Z2(Enum):
     def __mul__(self, other: 'Z2') -> 'Z2':
         return Z2(self.value & other.value)
 
-    def __neg__(self) -> 'Z2':
-        return self
-
-    def __sub__(self, other: 'Z2') -> 'Z2':
-        return self + other
-
     def __bool__(self) -> bool:
         if self == Z2.ZERO:
             return False
         else:
             return True
-
-    def inverse(self) -> 'Z2':
-        if self == Z2.ZERO:
-            raise ValueError("Zero has no multiplicative inverse")
-        return self
 
     def __repr__(self) -> str:
         return f"{self}"
