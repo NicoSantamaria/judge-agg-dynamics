@@ -46,10 +46,7 @@ def use_operation(symbol: Logic, *args: Z2) -> Z2:
         res = operations[symbol](args[0], args[1])
 
     if isinstance(res, bool):
-        if res:
-            return Z2.ONE
-        else:
-            return Z2.ZERO
+        return Z2.ONE if res else Z2.ZERO
     return res
 
 def evaluate_sentence(atoms: List[Prop], interpretation: Interpretation, sentence: Sentence) -> bool:
