@@ -25,7 +25,7 @@ def strs_to_sentence(strs: List[str]) -> Sentence:
 
     return [symbol_to_enum(symbol) for symbol in strs]
 
-def use_operation(symbol: Logic, *args: Z2) -> bool:
+def use_operation(symbol: Logic, *args: Z2) -> Z2:
     if len(args) == 0:
         raise ValueError("The function use_operation must be passed at least one argument of type Z2.")
     operations = {
@@ -35,7 +35,7 @@ def use_operation(symbol: Logic, *args: Z2) -> bool:
         Logic.OR: lambda p, q: p or q,
         Logic.IFF: lambda p, q: p == q
     }
-    res: bool | Z2 = False
+
     if symbol == Logic.NOT:
         if len(args) != 1:
             raise ValueError("NOT operation takes exactly 1 argument.")
@@ -44,9 +44,13 @@ def use_operation(symbol: Logic, *args: Z2) -> bool:
         if len(args) != 2:
             raise ValueError("AND, OR, IFF, and IMPLIES operations take exactly 2 arguments.")
         res = operations[symbol](args[0], args[1])
+
     if isinstance(res, bool):
-        return res
-    return bool(res)
+        if res:
+            return Z2.ONE
+        else:
+            return Z2.ZERO
+    return res
 
 def evaluate_sentence(atoms: List[Prop], interpretation: Interpretation, sentence: Sentence) -> bool:
     if len(atoms) == 0 or len(interpretation) == 0:

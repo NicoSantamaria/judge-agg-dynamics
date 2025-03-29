@@ -50,9 +50,9 @@ def test_strs_to_sentence():
         strs_to_sentence(["sd"])
 
 def test_use_operation():
-    assert use_operation(Logic.NOT, Z2(1)) == False
-    assert use_operation(Logic.AND, Z2(1), Z2(0)) == False
-    assert use_operation(Logic.OR, Z2(1), Z2(0)) == True
+    assert use_operation(Logic.NOT, Z2(1)) == Z2(0)
+    assert use_operation(Logic.AND, Z2(1), Z2(0)) == Z2(0)
+    assert use_operation(Logic.OR, Z2(1), Z2(0)) == Z2(1)
 
     with pytest.raises(ValueError, match="The function use_operation must be passed at least one argument of type Z2."):
         use_operation(Logic.NOT)
