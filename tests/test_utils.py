@@ -1,5 +1,5 @@
 import pytest
-from utils.utils import hamming_distance, evaluate_sentence, ints_to_interpretation, strs_to_sentence
+from utils.utils import hamming_distance, evaluate_sentence, ints_to_interpretation, strs_to_sentence, use_operation
 from utils.enums import Z2, Logic, Prop
 
 
@@ -48,3 +48,17 @@ def test_strs_to_sentence():
 
     with pytest.raises(ValueError, match="Symbol is neither a valid Prop nor Logic."):
         strs_to_sentence(["sd"])
+
+def test_use_operation():
+    assert use_operation(Logic.NOT, Z2(1)) == False
+    assert use_operation(Logic.AND, Z2(1), Z2(0)) == False
+    assert use_operation(Logic.OR, Z2(1), Z2(0)) == True
+
+    with pytest.raises(ValueError, match="The function use_operation must be passed at least one argument of type Z2."):
+        use_operation(Logic.NOT)
+
+    with pytest.raises(ValueError, match="NOT operation takes exactly 1 argument."):
+        use_operation(Logic.NOT, Z2(1), Z2(0))
+
+    with pytest.raises(ValueError, match="AND, OR, IFF, and IMPLIES operations take exactly 2 arguments."):
+        use_operation(Logic.AND, Z2(0))
