@@ -4,5 +4,6 @@ from utils.enums import Z2, Logic, Prop
 
 type Interpretation = List[Z2]
 type Sentence = List[Logic | Prop]
+# is Belief used anywhere?
 type Beliefs = Dict[Prop, Z2]
 type Matrix = ndarray

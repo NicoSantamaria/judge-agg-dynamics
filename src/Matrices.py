@@ -5,7 +5,9 @@ from AgentFromModels import AgentFromModels
 from GraphFromModels import GraphFromModels
 
 
-
+# TODO: For experiments, add method to get frequency of all possible end states
+# given a starting state
+# rename file MarkovChain?
 class MarkovChain:
     def __init__(self, graph: GraphFromModels):
         self.agents: List[AgentFromModels] = list(graph.graph)

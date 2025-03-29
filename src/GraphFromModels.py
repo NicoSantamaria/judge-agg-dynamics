@@ -4,6 +4,8 @@ from AgentFromModels import AgentFromModels
 from utils.utils import hamming_distance
 
 # THIS IS NEXT
+# why even take AgentFromModels?, just take a list of interpretation instead
+# would be nice to be able to take a BeliefBase instead also
 class GraphFromModels:
     def __init__(self, models: Models, agents: List[AgentFromModels]) -> None:
         self.models: Models = models
