@@ -34,10 +34,7 @@ class Z2(Enum):
         return Z2(self.value & other.value)
 
     def __bool__(self) -> bool:
-        if self == Z2.ZERO:
-            return False
-        else:
-            return True
+        return self == Z2.ONE
 
     def __repr__(self) -> str:
         return f"{self}"
