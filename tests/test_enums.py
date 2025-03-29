@@ -21,6 +21,9 @@ def test_Z2():
     assert bool(Z2(0)) == False
     assert bool(Z2(-5)) == True
 
+    assert bool(Z2.ZERO) == False
+    assert bool(Z2.ONE) == True
+
     with pytest.raises(ValueError, match="Z2 values must be of type int."):
         Z2(4.0)
     with pytest.raises(ValueError, match="Z2 values must be of type int."):
