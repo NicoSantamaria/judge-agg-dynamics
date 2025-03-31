@@ -1,6 +1,7 @@
 from typing import List
 from src.Graph import Graph
-from utils.enums import Z2
+from src.BeliefBase import BeliefBase
+from utils.enums import Z2, Prop, Logic
 from utils.types import Connection, Interpretation
 
 
@@ -19,3 +20,23 @@ def test_init():
     connections: List[Connection] = []
     G = Graph(models, connections)
     assert G.models == models
+
+    K = BeliefBase([Prop.P, Prop.Q], [])
+    connections: List[Connection] = []
+    G = Graph(K, connections)
+    assert G.models == K.models
+
+    K = BeliefBase([Prop.P, Prop.Q], [])
+    connections: List[Connection] = [(K.models[0], K.models[0])]
+    G = Graph(K, connections)
+    assert G.models == K.models
+
+    K = BeliefBase([Prop.P, Prop.Q], [[Logic.AND, Prop.P, Prop.Q], [Logic.NOT, Prop.Q]])
+    connections: List[Connection] = []
+    G = Graph(K, connections)
+    assert G.models == K.models
+
+    K = BeliefBase([Prop.P, Prop.Q, Prop.R], [[Logic.IFF, Prop.R, Logic.IMPLIES, Prop.P, Prop.Q]])
+    connections: List[Connection] = [(K.models[0], K.models[1]), (K.models[0], K.models[2])]
+    G = Graph(K, connections)
+    assert G.models == K.models
