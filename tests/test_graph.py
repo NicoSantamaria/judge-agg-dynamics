@@ -49,29 +49,40 @@ def test_init():
     G = Graph(K, connections, agents)
     assert G.models == K.models
 
-    # models: List[Interpretation] = []
-    # connections: List[Connection] = [([Z2(0)], [Z2(1)])]
-    # with pytest.raises(ValueError, match="Connections can only be drawn between models."):
-    #     G = Graph(models, connections)
+    models: List[Interpretation] = []
+    connections: List[Connection] = [([Z2(0)], [Z2(1)])]
+    agents: List[Interpretation] = []
+    with pytest.raises(ValueError, match="Connections can only be drawn between agents."):
+        G = Graph(models, connections, agents)
 
-    # models: List[Interpretation] = [[Z2(1), Z2(0)], [Z2(0), Z2(1)]]
-    # connections: List[Connection] = [([Z2(0)], [Z2(1)])]
-    # with pytest.raises(ValueError, match="Connections can only be drawn between models."):
-    #     G = Graph(models, connections)
+    models: List[Interpretation] = [[Z2(1), Z2(0)], [Z2(0), Z2(1)]]
+    connections: List[Connection] = [([Z2(0)], [Z2(1)])]
+    agents: List[Interpretation] = [[Z2(1), Z2(0)], [Z2(0), Z2(1)]]
+    with pytest.raises(ValueError, match="Connections can only be drawn between agents."):
+        G = Graph(models, connections, agents)
 
-    # models: List[Interpretation] = [[Z2(1), Z2(0)], [Z2(0), Z2(1)]]
-    # connections: List[Connection] = [([Z2(0), Z2(0)], [Z2(1), Z2(0)])]
-    # with pytest.raises(ValueError, match="Connections can only be drawn between models."):
-    #     G = Graph(models, connections)
+    models: List[Interpretation] = [[Z2(1), Z2(0)], [Z2(0), Z2(1)]]
+    connections: List[Connection] = [([Z2(1), Z2(0)], [Z2(1), Z2(0)])]
+    agents: List[Interpretation] = [[Z2(0), Z2(0)]]
+    with pytest.raises(ValueError, match="Agents must be represented by models."):
+        G = Graph(models, connections, agents)
 
-    # models: List[Interpretation] = [[Z2(1), Z2(0)], [Z2(0), Z2(1)]]
-    # connections: List[Connection] = [([Z2(1), Z2(0)], [Z2(1), Z2(1)])]
-    # with pytest.raises(ValueError, match="Connections can only be drawn between models."):
-    #     G = Graph(models, connections)
+    models: List[Interpretation] = [[Z2(1), Z2(0)], [Z2(0), Z2(1)]]
+    connections: List[Connection] = [([Z2(1), Z2(0)], [Z2(1), Z2(1)])]
+    agents: List[Interpretation] = []
+    with pytest.raises(ValueError, match="Connections can only be drawn between agents."):
+        G = Graph(models, connections, agents)
 
-    # K = BeliefBase([Prop.P, Prop.Q, Prop.R], [[Logic.IFF, Prop.R, Logic.IMPLIES, Prop.P, Prop.Q]])
-    # connections: List[Connection] = [([Z2(1), Z2(0), Z2(1)], [Z2(1), Z2(1), Z2(1)])]
-    # with pytest.raises(ValueError, match="Connections can only be drawn between models."):
-    #     G = Graph(K, connections)
+    K = BeliefBase([Prop.P, Prop.Q, Prop.R], [[Logic.IFF, Prop.R, Logic.IMPLIES, Prop.P, Prop.Q]])
+    connections: List[Connection] = [([Z2(1), Z2(1), Z2(1)], [Z2(1), Z2(1), Z2(1)])]
+    agents: List[Interpretation] = [[Z2(1), Z2(1), Z2(1)], [Z2(1), Z2(0), Z2(1)]]
+    with pytest.raises(ValueError, match="Agents must be represented by models."):
+        G = Graph(K, connections, agents)
+
+    K = BeliefBase([Prop.P, Prop.Q, Prop.R], [[Logic.IFF, Prop.R, Logic.IMPLIES, Prop.P, Prop.Q]])
+    connections: List[Connection] = [([Z2(1), Z2(0), Z2(1)], [Z2(1), Z2(1), Z2(1)])]
+    agents: List[Interpretation] = []
+    with pytest.raises(ValueError, match="Connections can only be drawn between agents."):
+        G = Graph(K, connections, agents)
 
 # test add_connection, remove_connection, complete_graph
