@@ -17,15 +17,8 @@ class BeliefBase:
 
         constraint_sentence: Sentence = constraints[0]
         for sentence in constraints[1:]:
-            constraint_sentence = self.get_conjunction(
-                constraint_sentence,
-                sentence
-            )
+            constraint_sentence = [Logic.AND] + constraint_sentence + sentence
         return constraint_sentence
-
-    def get_conjunction(self, sentence1: Sentence, sentence2: Sentence) -> Sentence:
-        return [Logic.AND] + sentence1 + sentence2
-
 
     def get_models(self) -> List[Interpretation]:
         models: List[Interpretation] = list()
