@@ -80,14 +80,14 @@ class Graph:
 
         return candidates
 
+    # DEPRECATED: would like to replace this with networkx draw functions
+    def __str__(self):
+        result = "The graph contains the following agents and their models:\n"
 
-    # def __str__(self):
-    #     result = "The graph contains the following agents and their models:\n"
+        for agent, connections in self.graph.items():
+            result += f"Agent {agent.name} with models {agent.model}:\n"
 
-    #     for agent, connections in self.graph.items():
-    #         result += f"Agent {agent.name} with models {agent.model}:\n"
+            for connection in connections:
+                result += f"  Connected to: {connection.name}, Models: {connection.model}\n"
 
-    #         for connection in connections:
-    #             result += f"  Connected to: {connection.name}, Models: {connection.model}\n"
-
-    #     return result
+        return result
