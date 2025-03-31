@@ -66,3 +66,5 @@ def test_init():
     connections: List[Connection] = [([Z2(1), Z2(0), Z2(1)], [Z2(1), Z2(1), Z2(1)])]
     with pytest.raises(ValueError, match="Connections can only be drawn between models."):
         G = Graph(K, connections)
+
+# test add_connection, remove_connection, complete_graph

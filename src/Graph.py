@@ -1,29 +1,33 @@
 import random
-from BeliefBase import Interpretation
-from AgentFromModels import AgentFromModels
-from utils.utils import hamming_distance
-
-# THIS IS NEXT
-# why even take AgentFromModels?, just take a list of interpretation instead
-# would be nice to be able to take a BeliefBase instead also
-class GraphFromModels:
-    def __init__(self, models: Models, agents: List[AgentFromModels]) -> None:
-        self.models: Models = models
-        self.graph: GraphFromModelsType = {agent: [] for agent in agents}
+from typing import List
+from itertools import product
+from utils.types import Interpretation, Connection
+from src.BeliefBase import BeliefBase
 
 
-    def add_connections(self, agent: AgentFromModels, connections: List[AgentFromModels]) -> None:
-        self.graph[agent] = connections
+class Graph:
+    def __init__(self, models: List[Interpretation] | BeliefBase, connections: List[Connection]) -> None:
+        self.models: List[Interpretation] = []
+        if isinstance(models, BeliefBase):
+            self.models = models.models
+        else:
+            self.models = models
 
+        for model1, model2 in connections:
+            if model1 not in self.models or model2 not in self.models:
+                raise ValueError("Connections can only be drawn between models.")
+        self.connections: List[Connection] = connections
 
-    def remove_connection(self, agent: AgentFromModels, connections: List[AgentFromModels]) -> None:
-        for connection in connections:
-            self.graph[agent].remove(connection)
+    def add_connections(self, connection: Connection) -> None:
+        self.connections.append(connection)
 
+    def remove_connection(self, connection: Connection) -> None:
+        if connection not in self.connections:
+            raise ValueError("Connection to be removed was not found.")
+        self.connections.remove(connection)
 
     def complete_graph(self) -> None:
-        for agent in self.graph:
-            self.add_connections(agent, list(self.graph.keys()))
+        self.connections = [(a, b) for a, b in product(self.models, repeat=2)]
 
 
     def update(self) -> None:
