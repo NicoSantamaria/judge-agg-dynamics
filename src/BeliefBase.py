@@ -6,7 +6,7 @@ from utils.types import Sentence, Interpretation
 
 
 class BeliefBase:
-    def __init__(self, atoms: List[Prop], constraints: List[Sentence]=list(),) -> None:
+    def __init__(self, atoms: List[Prop], constraints: List[Sentence]=list()) -> None:
         self.atoms: List[Prop] = atoms
         self.constraints: Sentence = self.get_constraints(constraints)
         self.models: List[Interpretation] = self.get_models()
