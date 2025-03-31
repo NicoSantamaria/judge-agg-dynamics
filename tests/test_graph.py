@@ -208,7 +208,7 @@ def test_update():
         G = Graph(K, connections, agents)
         G.update()
         assert G.agents[0] in [agents[0], agents[1]]
-        assert G.agents[1] == G.agents[1]
+        assert G.agents[1] == agents[1]
 
         K = BeliefBase([Prop.P, Prop.Q, Prop.R], [[Logic.IFF, Prop.R, Logic.IMPLIES, Prop.P, Prop.Q]])
         connections: List[Connection] = []
