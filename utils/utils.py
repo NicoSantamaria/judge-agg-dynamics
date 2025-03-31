@@ -1,4 +1,5 @@
 from typing import List
+# remove beliefs
 from utils.types import Interpretation, Sentence, Beliefs
 from utils.enums import Prop, Logic, Z2
 
@@ -57,6 +58,7 @@ def evaluate_sentence(atoms: List[Prop], interpretation: Interpretation, sentenc
     if sentence == []:
         return True
 
+    # rewrite without beliefs (more efficient too)
     stack: List[Z2] = list()
     interp: Beliefs = dict(zip(
         atoms,
