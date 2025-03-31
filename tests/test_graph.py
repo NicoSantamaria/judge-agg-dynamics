@@ -107,6 +107,13 @@ def test_add_connection():
     G.add_connection((K.models[1], K.models[1]))
     assert G.connections == [(K.models[0], K.models[1]), (K.models[0], K.models[2]), (K.models[1], K.models[1])]
 
+    K = BeliefBase([Prop.P, Prop.Q], [[Logic.AND, Prop.P, Prop.Q], [Logic.NOT, Prop.Q]])
+    connections: List[Connection] = []
+    agents: List[Interpretation] = []
+    G = Graph(K, connections, agents)
+    with pytest.raises(ValueError, match="Connections can only be drawn between agents."):
+        G.add_connection(([Z2(0)], [Z2(1)]))
+
 
 def test_remove_connection():
     models: List[Interpretation] = [[Z2(1), Z2(0)], [Z2(0), Z2(1)]]
@@ -130,5 +137,11 @@ def test_remove_connection():
     G.remove_connection((K.models[0], K.models[1]))
     assert G.connections == [(K.models[0], K.models[2])]
 
+    K = BeliefBase([Prop.P, Prop.Q], [[Logic.AND, Prop.P, Prop.Q], [Logic.NOT, Prop.Q]])
+    connections: List[Connection] = []
+    agents: List[Interpretation] = []
+    G = Graph(K, connections, agents)
+    with pytest.raises(ValueError, match="Connection to be removed was not found."):
+        G.remove_connection(([Z2(0)], [Z2(1)]))
 # def test_complete_graph():
 #     return
