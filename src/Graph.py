@@ -28,7 +28,7 @@ class Graph:
                 raise ValueError("Connections can only be drawn between agents.")
         self.connections: List[Connection] = connections
 
-    def add_connections(self, connection: Connection) -> None:
+    def add_connection(self, connection: Connection) -> None:
         (model1, model2) = connection
         if model1 not in self.models or model2 not in self.models:
             raise ValueError("Connections can only be drawn between agents.")

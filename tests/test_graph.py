@@ -85,4 +85,31 @@ def test_init():
     with pytest.raises(ValueError, match="Connections can only be drawn between agents."):
         G = Graph(K, connections, agents)
 
-# test add_connection, remove_connection, complete_graph
+def test_add_connection():
+    models: List[Interpretation] = [[Z2(1), Z2(0)], [Z2(0), Z2(1)]]
+    connections: List[Connection] = [(models[0], models[1])]
+    agents: List[Interpretation] = [models[0], models[1]]
+    G = Graph(models, connections, agents)
+    G.add_connection((models[1], models[1]))
+    assert G.connections == [(models[0], models[1]), (models[1], models[1])]
+
+    K = BeliefBase([Prop.P, Prop.Q], [])
+    connections: List[Connection] = [(K.models[0], K.models[0])]
+    agents: List[Interpretation] = [K.models[0], K.models[1]]
+    G = Graph(K, connections, agents)
+    G.add_connection((K.models[1], K.models[1]))
+    assert G.connections == [(K.models[0], K.models[0]), (K.models[1], K.models[1])]
+
+    K = BeliefBase([Prop.P, Prop.Q, Prop.R], [[Logic.IFF, Prop.R, Logic.IMPLIES, Prop.P, Prop.Q]])
+    connections: List[Connection] = [(K.models[0], K.models[1]), (K.models[0], K.models[2])]
+    agents: List[Interpretation] = [K.models[0], K.models[1], K.models[2]]
+    G = Graph(K, connections, agents)
+    G.add_connection((K.models[1], K.models[1]))
+    assert G.connections == [(K.models[0], K.models[1]), (K.models[0], K.models[2]), (K.models[1], K.models[1])]
+
+
+# def test_remove_connection():
+#     return
+
+# def test_complete_graph():
+#     return
