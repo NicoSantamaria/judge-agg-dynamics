@@ -29,16 +29,19 @@ class Graph:
                 raise ValueError("Connections can only be drawn between agents.")
         self.connections: List[Connection] = connections
 
+
     def add_connection(self, connection: Connection) -> None:
         (model1, model2) = connection
         if model1 not in self.models or model2 not in self.models:
             raise ValueError("Connections can only be drawn between agents.")
         self.connections.append(connection)
 
+
     def remove_connection(self, connection: Connection) -> None:
         if connection not in self.connections:
             raise ValueError("Connection to be removed was not found.")
         self.connections.remove(connection)
+
 
     def complete_graph(self) -> None:
         self.connections = [(a, b) for a, b in product(self.agents, repeat=2)]
@@ -50,21 +53,21 @@ class Graph:
     #         self.agents[i] = result
 
     def hamming_distance_rule(self, agent: Interpretation) -> List[Interpretation]:
-        candidates: List[Interpretation] = list()
-        candidate_minimum: float = float('inf')
+        candidates: List[Interpretation] = []
+        current_min = float('inf')
 
-        for model in self.models:
-            current_distance: int = 0
+        for candidate in self.models:
+            candidate_distance: int = 0
+            for connection in self.connections:
+                (agent_model, connection_model) = connection
+                if agent_model == agent:
+                    candidate_distance += hamming_distance(candidate, connection_model)
 
-            for connection in self.graph[agent]:
-                distance_to_agent_model = hamming_distance(model, connection.model)
-                current_distance += distance_to_agent_model
-
-            if current_distance < candidate_minimum:
-                candidates = [model]
-                candidate_minimum = current_distance
-            elif current_distance == candidate_minimum:
-                candidates.append(model)
+            if candidate_distance < current_min:
+                candidates = [candidate]
+                current_min = candidate_distance
+            elif candidate_distance == current_min:
+                candidates.append(candidate)
 
         return candidates
 

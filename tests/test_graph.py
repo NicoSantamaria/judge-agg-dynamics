@@ -162,5 +162,39 @@ def test_complete_graph():
         (K.models[0], K.models[1]),
         (K.models[1], K.models[0]),
         (K.models[1], K.models[1])
+    ]
 
+def test_hamming_distance_rule():
+    K = BeliefBase([Prop.P], [])
+    agents: List[Interpretation] = [[Z2(0)], [Z2(1)]]
+    connections: List[Connection] = [(agents[0], agents[0]), (agents[0], agents[1]), (agents[1], agents[1])]
+    G = Graph(K, connections, agents)
+    assert G.hamming_distance_rule(agents[0]) == [agents[0], agents[1]]
+
+    K = BeliefBase([Prop.P], [])
+    agents: List[Interpretation] = [[Z2(0)], [Z2(1)]]
+    connections: List[Connection] = [(agents[0], agents[0]), (agents[0], agents[1]), (agents[1], agents[1])]
+    G = Graph(K, connections, agents)
+    assert G.hamming_distance_rule(agents[1]) == [agents[1]]
+
+    K = BeliefBase([Prop.P, Prop.Q, Prop.R], [[Logic.IFF, Prop.R, Logic.IMPLIES, Prop.P, Prop.Q]])
+    connections: List[Connection] = []
+    agents: List[Interpretation] = [[Z2(1), Z2(0), Z2(0)], [Z2(0), Z2(0), Z2(1)], [Z2(1), Z2(1), Z2(1)]]
+    G = Graph(K, connections, agents)
+    G.complete_graph()
+    assert G.hamming_distance_rule([Z2(1), Z2(0), Z2(0)]) ==  [
+        [Z2(0), Z2(0), Z2(1)],
+        [Z2(1), Z2(0), Z2(0)],
+        [Z2(1), Z2(1), Z2(1)]
+    ]
+
+    K = BeliefBase([Prop.P, Prop.Q, Prop.R], [[Logic.IFF, Prop.R, Logic.IMPLIES, Prop.P, Prop.Q]])
+    connections: List[Connection] = []
+    agents: List[Interpretation] = [[Z2(1), Z2(0), Z2(0)], [Z2(0), Z2(0), Z2(1)], [Z2(1), Z2(1), Z2(1)]]
+    G = Graph(K, connections, agents)
+    G.complete_graph()
+    assert G.hamming_distance_rule([Z2(1), Z2(1), Z2(1)]) ==  [
+        [Z2(0), Z2(0), Z2(1)],
+        [Z2(1), Z2(0), Z2(0)],
+        [Z2(1), Z2(1), Z2(1)]
     ]
