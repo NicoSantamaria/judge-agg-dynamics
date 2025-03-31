@@ -198,3 +198,10 @@ def test_hamming_distance_rule():
         [Z2(1), Z2(0), Z2(0)],
         [Z2(1), Z2(1), Z2(1)]
     ]
+
+    K = BeliefBase([Prop.P], [])
+    agents: List[Interpretation] = [[Z2(0)]]
+    connections: List[Connection] = []
+    G = Graph(K, connections, agents)
+    with pytest.raises(ValueError, match="Agent not found in graph."):
+        G.hamming_distance_rule([Z2(1)])

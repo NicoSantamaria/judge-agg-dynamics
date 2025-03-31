@@ -53,6 +53,9 @@ class Graph:
     #         self.agents[i] = result
 
     def hamming_distance_rule(self, agent: Interpretation) -> List[Interpretation]:
+        if agent not in self.agents:
+            raise ValueError("Agent not found in graph.")
+
         candidates: List[Interpretation] = []
         current_min = float('inf')
 
