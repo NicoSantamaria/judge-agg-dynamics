@@ -143,5 +143,24 @@ def test_remove_connection():
     G = Graph(K, connections, agents)
     with pytest.raises(ValueError, match="Connection to be removed was not found."):
         G.remove_connection(([Z2(0)], [Z2(1)]))
-# def test_complete_graph():
-#     return
+
+def test_complete_graph():
+    models: List[Interpretation] = [[Z2(0)]]
+    connections: List[Connection] = []
+    agents: List[Interpretation] = [models[0]]
+    G = Graph(models, connections, agents)
+    G.complete_graph()
+    assert G.connections == [(models[0], models[0])]
+
+    K = BeliefBase([Prop.P, Prop.Q], [])
+    connections: List[Connection] = [(K.models[0], K.models[0])]
+    agents: List[Interpretation] = [K.models[0], K.models[1]]
+    G = Graph(K, connections, agents)
+    G.complete_graph()
+    assert G.connections == [
+        (K.models[0], K.models[0]),
+        (K.models[0], K.models[1]),
+        (K.models[1], K.models[0]),
+        (K.models[1], K.models[1])
+
+    ]

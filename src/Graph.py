@@ -10,7 +10,7 @@ from src.BeliefBase import BeliefBase
 class Graph:
     def __init__(self,
         models: List[Interpretation] | BeliefBase,
-        connections: List[Connection],
+        connections: List[Connection]=[],
         agents: List[Interpretation]=[]
     ) -> None:
         self.models: List[Interpretation] = []
@@ -41,7 +41,7 @@ class Graph:
         self.connections.remove(connection)
 
     def complete_graph(self) -> None:
-        self.connections = [(a, b) for a, b in product(self.models, repeat=2)]
+        self.connections = [(a, b) for a, b in product(self.agents, repeat=2)]
 
     # def update(self) -> None:
     #     for i, agent in enumerate(self.agents):
