@@ -1,5 +1,5 @@
-import random
-from typing import List
+from random import choice
+from typing import List, cast
 from itertools import product
 from utils.utils import hamming_distance
 from utils.types import Interpretation, Connection
@@ -22,7 +22,7 @@ class Graph:
         for agent in agents:
             if agent not in self.models:
                 raise ValueError("Agents must be represented by models.")
-        self.agents = agents
+        self.agents: List[Interpretation] = agents
 
         for model1, model2 in connections:
             if model1 not in self.agents or model2 not in self.agents:
@@ -46,11 +46,17 @@ class Graph:
     def complete_graph(self) -> None:
         self.connections = [(a, b) for a, b in product(self.agents, repeat=2)]
 
-    # def update(self) -> None:
-    #     for i, agent in enumerate(self.agents):
-    #         candidates = self.hamming_distance_rule(agent)
-    #         result = self.tiebreaker_chance(candidates)
-    #         self.agents[i] = result
+
+    def update(self) -> None:
+        results: List[Interpretation | None] = [None] * len(self.agents)
+        for i, agent in enumerate(self.agents):
+            candidates = self.hamming_distance_rule(agent)
+            results[i] = choice(candidates)
+
+        if any(res is None for res in results):
+            raise ValueError("Update failed.")
+        self.agents = cast(List[Interpretation], results)
+
 
     def hamming_distance_rule(self, agent: Interpretation) -> List[Interpretation]:
         if agent not in self.agents:
@@ -73,10 +79,6 @@ class Graph:
                 candidates.append(candidate)
 
         return candidates
-
-
-    # def tiebreaker_chance(self, interps: List[Interpretation]) -> Interpretation:
-    #     return random.choice(interps)
 
 
     # def __str__(self):
