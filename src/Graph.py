@@ -5,7 +5,8 @@ from utils.utils import hamming_distance
 from utils.types import Interpretation, Connection
 from src.BeliefBase import BeliefBase
 
-
+# TODO: use networkx library to get graphics of each graph
+# Potentially we also want to be able to input integers directly, like in beliefbase
 class Graph:
     def __init__(self,
         models: List[Interpretation] | BeliefBase,
@@ -48,24 +49,24 @@ class Graph:
     #         result = self.tiebreaker_chance(candidates)
     #         self.agents[i] = result
 
-    # def hamming_distance_rule(self, agent: Interpretation) -> List[Interpretation]:
-    #     candidates: List[Interpretation] = list()
-    #     candidate_minimum: float = float('inf')
+    def hamming_distance_rule(self, agent: Interpretation) -> List[Interpretation]:
+        candidates: List[Interpretation] = list()
+        candidate_minimum: float = float('inf')
 
-    #     for model in self.models:
-    #         current_distance: int = 0
+        for model in self.models:
+            current_distance: int = 0
 
-    #         for connection in self.graph[agent]:
-    #             distance_to_agent_model = hamming_distance(model, connection.model)
-    #             current_distance += distance_to_agent_model
+            for connection in self.graph[agent]:
+                distance_to_agent_model = hamming_distance(model, connection.model)
+                current_distance += distance_to_agent_model
 
-    #         if current_distance < candidate_minimum:
-    #             candidates = [model]
-    #             candidate_minimum = current_distance
-    #         elif current_distance == candidate_minimum:
-    #             candidates.append(model)
+            if current_distance < candidate_minimum:
+                candidates = [model]
+                candidate_minimum = current_distance
+            elif current_distance == candidate_minimum:
+                candidates.append(model)
 
-    #     return candidates
+        return candidates
 
 
     # def tiebreaker_chance(self, interps: List[Interpretation]) -> Interpretation:

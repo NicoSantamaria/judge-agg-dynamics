@@ -4,7 +4,7 @@ from utils.utils import evaluate_sentence
 from utils.enums import Z2, Prop, Logic
 from utils.types import Sentence, Interpretation
 
-
+# TODO: allow input by strs instead of props
 class BeliefBase:
     def __init__(self, atoms: List[Prop], constraints: List[Sentence]=list()) -> None:
         self.atoms: List[Prop] = atoms
