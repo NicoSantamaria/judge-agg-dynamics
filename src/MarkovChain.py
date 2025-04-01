@@ -1,8 +1,8 @@
 import numpy as np
 from itertools import product
 from typing import List
-from utils.types import Matrix
-from utils.utils import interpretation_to_ints
+from utils.types import Interpretation, Matrix, MatrixZ2
+# from utils.utils import interpretation_to_ints
 from src.Graph import Graph
 
 
@@ -11,42 +11,42 @@ from src.Graph import Graph
 # rename file MarkovChain?
 class MarkovChain:
     def __init__(self, graph: Graph) -> None:
-        self.agents: List[List[int]] = [interpretation_to_ints(interp) for interp in graph.agents]
-        self.model_matrix: Matrix = np.transpose([interpretation_to_ints(interp) for interp in graph.models])
+        self.agents: List[Interpretation] = graph.agents
+        self.model_matrix: MatrixZ2 = np.transpose(np.array(graph.models))
 
-        if self.model_matrix.size > 0 and len(self.agents) > 0:
-            rows = len(self.model_matrix[0])
-            cols = len(self.agents)
-            self.coord_matrix = np.zeros((rows, cols))
+        # if self.model_matrix.size > 0 and len(self.agents) > 0:
+        #     rows = len(self.model_matrix[0])
+        #     cols = len(self.agents)
+        #     self.coord_matrix = np.zeros((rows, cols))
 
-            agent_tuples = [tuple(agent) for agent in self.agents]
-            model_tuples = [tuple(model) for model in np.transpose(self.model_matrix)]
+        #     agent_tuples = [tuple(agent) for agent in self.agents]
+        #     model_tuples = [tuple(model) for model in np.transpose(self.model_matrix)]
 
-            for i, agent_tuple in enumerate(agent_tuples):
-                for j, model_tuple in enumerate(model_tuples):
-                    if agent_tuple == model_tuple:
-                        self.coord_matrix[j, i] = 1
-        else:
-            self.coord_matrix = np.array([])
+        #     for i, agent_tuple in enumerate(agent_tuples):
+        #         for j, model_tuple in enumerate(model_tuples):
+        #             if agent_tuple == model_tuple:
+        #                 self.coord_matrix[j, i] = 1
+        # else:
+        #     self.coord_matrix = np.array([])
 
-        dim: int = len(self.agents)
-        if dim == 0:
-            self.adjacency = np.array([])
-        else:
-            self.adjacency: Matrix = np.zeros((dim, dim))
-            for (i, j) in product(range(dim), repeat=2):
-                if (graph.agents[i], graph.agents[j]) in graph.connections:
-                    self.adjacency[i, j] = 1
+        # dim: int = len(self.agents)
+        # if dim == 0:
+        #     self.adjacency = np.array([])
+        # else:
+        #     self.adjacency: Matrix = np.zeros((dim, dim))
+        #     for (i, j) in product(range(dim), repeat=2):
+        #         if (graph.agents[i], graph.agents[j]) in graph.connections:
+        #             self.adjacency[i, j] = 1
 
 
-        self.states: List[Matrix] = self._get_possible_states(np.ones(self.coord_matrix.shape))
-        self.state_graph_matrix: Matrix = self._build_state_graph()
-        self.stationary: Matrix = self.find_stationary(self.state_graph_matrix)
+        # self.states: List[Matrix] = self._get_possible_states(np.ones(self.coord_matrix.shape))
+        # self.state_graph_matrix: Matrix = self._build_state_graph()
+        # self.stationary: Matrix = self.find_stationary(self.state_graph_matrix)
 
 
     # these last methods should be fine, given that they only use Matrix types
     @staticmethod
-    def model_distances(mat1: Matrix, mat2: Matrix) -> Matrix:
+    def model_distances(mat1: MatrixZ2, mat2: MatrixZ2) -> Matrix:
         rows: int = mat1.shape[0]
         cols: int = mat2.shape[1]
         distance_matrix: Matrix = np.zeros((rows, cols))
