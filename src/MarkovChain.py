@@ -13,14 +13,14 @@ class MarkovChain:
     def __init__(self, graph: Graph) -> None:
         # is self.agents necessary? we have self.states
         # instead we could just test inputs with a check_outcome method with state matrices as input
-        self.agents: List[Interpretation] = graph.agents
-        self.model_matrix: Matrix = np.matrix_transpose([interpretation_to_ints(interp) for interp in graph.models])
+        self.agents: List[List[int]] = [interpretation_to_ints(interp) for interp in graph.agents]
+        self.model_matrix: Matrix = np.transpose([interpretation_to_ints(interp) for interp in graph.models])
 
-        self.coord_matrix: Matrix = self._get_coord_matrix(self.agents, self.model_matrix)
-        self.adjacency: Matrix = self._get_adjacency_matrix(self.agents, graph)
-        self.states: List[Matrix] = self._get_possible_states(np.ones(self.coord_matrix.shape))
-        self.state_graph_matrix: Matrix = self._build_state_graph()
-        self.stationary: Matrix = self.find_stationary(self.state_graph_matrix)
+        # self.coord_matrix: Matrix = self._get_coord_matrix(self.agents, self.model_matrix)
+        # self.adjacency: Matrix = self._get_adjacency_matrix(self.agents, graph)
+        # self.states: List[Matrix] = self._get_possible_states(np.ones(self.coord_matrix.shape))
+        # self.state_graph_matrix: Matrix = self._build_state_graph()
+        # self.stationary: Matrix = self.find_stationary(self.state_graph_matrix)
 
 
     def _get_coord_matrix(self, agents: List[Interpretation], model_matrix: Matrix) -> Matrix:
@@ -40,13 +40,17 @@ class MarkovChain:
         dim: int = len(agents)
         adjacency: Matrix = np.zeros((dim, dim))
 
+        for (i, j) in product(range(dim), repeat=2):
+            if (agents[i], agents[j]) in graph.connections:
+                adjacency[i, j] = 1
+
         # certainly can rewrite better with product function
-        for i in range(dim):
-            for j in range(dim):
-                agent = agents[i]
-                connection = agents[j]
-                if (agent, connection) in graph.connections:
-                    adjacency[i, j] = 1
+        # for i in range(dim):
+        #     for j in range(dim):
+        #         agent = agents[i]
+        #         connection = agents[j]
+        #         if (agent, connection) in graph.connections:
+        #             adjacency[i, j] = 1
 
         return adjacency
 

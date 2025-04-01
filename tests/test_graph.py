@@ -6,7 +6,7 @@ from utils.enums import Z2, Prop, Logic
 from utils.types import Connection, Interpretation
 
 
-def test_init():
+def test_graph_init():
     models: List[Interpretation] = [[Z2(1), Z2(0)], [Z2(0), Z2(1)]]
     connections: List[Connection] = []
     agents: List[Interpretation] = []
