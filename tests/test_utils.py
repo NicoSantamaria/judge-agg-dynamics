@@ -1,5 +1,5 @@
 import pytest
-from utils.utils import hamming_distance, evaluate_sentence, ints_to_interpretation, strs_to_sentence, use_operation
+from utils.utils import hamming_distance, evaluate_sentence, ints_to_interpretation, interpretation_to_ints, strs_to_sentence, use_operation
 from utils.enums import Z2, Logic, Prop
 
 
@@ -37,6 +37,12 @@ def test_ints_to_interpretation():
     assert ints_to_interpretation([1, 0, 1]) == [Z2(1), Z2(0), Z2(1)]
     assert ints_to_interpretation([0, 0]) == [Z2(0), Z2(0)]
     assert ints_to_interpretation([3, 2, 1]) == [Z2(1), Z2(0), Z2(1)]
+
+def test_interpretation_to_ints():
+    assert interpretation_to_ints([]) == []
+    assert interpretation_to_ints([Z2(1), Z2(0), Z2(1)]) == [1, 0, 1]
+    assert interpretation_to_ints([Z2(0), Z2(0)]) == [0, 0]
+    assert interpretation_to_ints([Z2(1), Z2(0), Z2(1)]) == [1, 0, 1]
 
 def test_strs_to_sentence():
     assert strs_to_sentence([]) == []
