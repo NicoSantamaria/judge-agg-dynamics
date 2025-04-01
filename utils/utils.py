@@ -12,6 +12,9 @@ def hamming_distance(vec1: Interpretation, vec2: Interpretation) -> int:
 def ints_to_interpretation(nums: List[int]) -> Interpretation:
     return [Z2(a % 2) for a in nums]
 
+def interpretation_to_ints(interp: Interpretation) -> List[int]:
+    return [0 if z == Z2.ZERO else 1 for z in interp]
+
 def strs_to_sentence(strs: List[str]) -> Sentence:
     def symbol_to_enum(symbol: str) -> Prop | Logic:
         try:

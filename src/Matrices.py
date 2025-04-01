@@ -1,55 +1,56 @@
 import numpy as np
 from itertools import product
 from typing import List
-from AgentFromModels import AgentFromModels
-from GraphFromModels import GraphFromModels
+from utils.types import Interpretation, Matrix
+from utils.utils import interpretation_to_ints
+from src.Graph import Graph
 
 
 # TODO: For experiments, add method to get frequency of all possible end states
 # given a starting state
 # rename file MarkovChain?
 class MarkovChain:
-    def __init__(self, graph: GraphFromModels):
-        self.agents: List[AgentFromModels] = list(graph.graph)
-        self.model_matrix: Matrix = np.matrix_transpose(graph.models)
+    def __init__(self, graph: Graph) -> None:
+        # is self.agents necessary? we have self.states
+        # instead we could just test inputs with a check_outcome method with state matrices as input
+        self.agents: List[Interpretation] = graph.agents
+        self.model_matrix: Matrix = np.matrix_transpose([interpretation_to_ints(interp) for interp in graph.models])
 
         self.coord_matrix: Matrix = self._get_coord_matrix(self.agents, self.model_matrix)
-        self.adjacency = self._get_adjacency_matrix(self.agents, graph)
+        self.adjacency: Matrix = self._get_adjacency_matrix(self.agents, graph)
         self.states: List[Matrix] = self._get_possible_states(np.ones(self.coord_matrix.shape))
         self.state_graph_matrix: Matrix = self._build_state_graph()
         self.stationary: Matrix = self.find_stationary(self.state_graph_matrix)
 
 
-    @staticmethod
-    def _get_coord_matrix(agents: List[AgentFromModels], model_matrix: Matrix) -> Matrix:
+    def _get_coord_matrix(self, agents: List[Interpretation], model_matrix: Matrix) -> Matrix:
         rows: int = len(model_matrix[0])
         cols: int = len(agents)
         coord_matrix: Matrix = np.zeros((rows, cols))
-
         for i, agent in enumerate(agents):
             for j, model in enumerate(np.transpose(model_matrix)):
-                if agent.model == tuple(model):
+                # I don't love that we have to translate back to ints
+                if tuple(interpretation_to_ints(agent)) == tuple(model):
                     coord_matrix[j, i] = 1
-
         return coord_matrix
 
 
     @staticmethod
-    def _get_adjacency_matrix(agents: List[AgentFromModels], graph: GraphFromModels) -> Matrix:
+    def _get_adjacency_matrix(agents: List[Interpretation], graph: Graph) -> Matrix:
         dim: int = len(agents)
         adjacency: Matrix = np.zeros((dim, dim))
 
+        # certainly can rewrite better with product function
         for i in range(dim):
             for j in range(dim):
                 agent = agents[i]
                 connection = agents[j]
-
-                if connection in graph.graph[agent]:
+                if (agent, connection) in graph.connections:
                     adjacency[i, j] = 1
 
         return adjacency
 
-
+    # these last methods should be fine, given that they only use Matrix types
     @staticmethod
     def model_distances(mat1: Matrix, mat2: Matrix) -> Matrix:
         rows: int = mat1.shape[0]

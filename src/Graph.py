@@ -7,6 +7,8 @@ from src.BeliefBase import BeliefBase
 
 # TODO: use networkx library to get graphics of each graph
 # Potentially we also want to be able to input integers directly, like in beliefbase
+# NOTE: after some experimentation, the easier solution is actually probably to only allow integer inputs,
+# then convert in the init class
 class Graph:
     def __init__(self,
         models: List[Interpretation] | BeliefBase,
