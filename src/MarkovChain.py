@@ -11,10 +11,24 @@ from src.Graph import Graph
 # rename file MarkovChain?
 class MarkovChain:
     def __init__(self, graph: Graph) -> None:
-        # is self.agents necessary? we have self.states
-        # instead we could just test inputs with a check_outcome method with state matrices as input
         self.agents: List[List[int]] = [interpretation_to_ints(interp) for interp in graph.agents]
         self.model_matrix: Matrix = np.transpose([interpretation_to_ints(interp) for interp in graph.models])
+
+        if self.model_matrix.size > 0 and len(self.agents) > 0:
+            rows = len(self.model_matrix[0])
+            cols = len(self.agents)
+            self.coord_matrix = np.zeros((rows, cols))
+
+            agent_tuples = [tuple(agent) for agent in self.agents]
+            model_tuples = [tuple(model) for model in np.transpose(self.model_matrix)]
+
+            for i, agent_tuple in enumerate(agent_tuples):
+                for j, model_tuple in enumerate(model_tuples):
+                    if agent_tuple == model_tuple:
+                        self.coord_matrix[j, i] = 1
+        else:
+            self.coord_matrix = np.array([])
+
 
         # self.coord_matrix: Matrix = self._get_coord_matrix(self.agents, self.model_matrix)
         # self.adjacency: Matrix = self._get_adjacency_matrix(self.agents, graph)
