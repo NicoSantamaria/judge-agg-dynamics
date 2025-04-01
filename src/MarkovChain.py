@@ -2,7 +2,7 @@ import numpy as np
 from itertools import product
 from typing import List
 from utils.types import Interpretation, Matrix, MatrixZ2
-# from utils.utils import interpretation_to_ints
+from utils.enums import Z2
 from src.Graph import Graph
 
 
@@ -14,29 +14,33 @@ class MarkovChain:
         self.agents: List[Interpretation] = graph.agents
         self.model_matrix: MatrixZ2 = np.transpose(np.array(graph.models))
 
-        # if self.model_matrix.size > 0 and len(self.agents) > 0:
-        #     rows = len(self.model_matrix[0])
-        #     cols = len(self.agents)
-        #     self.coord_matrix = np.zeros((rows, cols))
+        if self.model_matrix.size > 0 and len(self.agents) > 0:
+            rows = len(self.model_matrix[0])
+            cols = len(self.agents)
+            self.coord_matrix: MatrixZ2 = np.empty((rows, cols), dtype=object)
 
-        #     agent_tuples = [tuple(agent) for agent in self.agents]
-        #     model_tuples = [tuple(model) for model in np.transpose(self.model_matrix)]
+            agent_tuples = [tuple(agent) for agent in self.agents]
+            model_tuples = [tuple(model) for model in np.transpose(self.model_matrix)]
 
-        #     for i, agent_tuple in enumerate(agent_tuples):
-        #         for j, model_tuple in enumerate(model_tuples):
-        #             if agent_tuple == model_tuple:
-        #                 self.coord_matrix[j, i] = 1
-        # else:
-        #     self.coord_matrix = np.array([])
+            for i, agent_tuple in enumerate(agent_tuples):
+                for j, model_tuple in enumerate(model_tuples):
+                    if agent_tuple == model_tuple:
+                        self.coord_matrix[j, i] = Z2.ONE
+                    else:
+                        self.coord_matrix[j, i] = Z2.ZERO
+        else:
+            self.coord_matrix = np.array([])
 
-        # dim: int = len(self.agents)
-        # if dim == 0:
-        #     self.adjacency = np.array([])
-        # else:
-        #     self.adjacency: Matrix = np.zeros((dim, dim))
-        #     for (i, j) in product(range(dim), repeat=2):
-        #         if (graph.agents[i], graph.agents[j]) in graph.connections:
-        #             self.adjacency[i, j] = 1
+        dim: int = len(self.agents)
+        if dim == 0:
+            self.adjacency = np.array([])
+        else:
+            self.adjacency: Matrix = np.empty((dim, dim), dtype=object)
+            for (i, j) in product(range(dim), repeat=2):
+                if (graph.agents[i], graph.agents[j]) in graph.connections:
+                    self.adjacency[i, j] = Z2.ONE
+                else:
+                    self.adjacency[i, j] = Z2.ZERO
 
 
         # self.states: List[Matrix] = self._get_possible_states(np.ones(self.coord_matrix.shape))
