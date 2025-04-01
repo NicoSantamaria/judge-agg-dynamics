@@ -8,6 +8,7 @@ from utils.enums import Z2, Prop, Logic
 from utils.types import Connection, Interpretation
 
 def test_markov_chain_init():
+    # Should probably add one more meaningful test with more models...
     models: List[Interpretation] = [[Z2(1), Z2(0)], [Z2(0), Z2(1)]]
     connections: List[Connection] = []
     agents: List[Interpretation] = []
@@ -19,6 +20,7 @@ def test_markov_chain_init():
         [0, 1]
     ]))
     assert np.array_equal(M.coord_matrix, np.array([]))
+    assert np.array_equal(M.adjacency, np.array([]))
 
     models: List[Interpretation] = [[Z2(1), Z2(0)], [Z2(0), Z2(1)]]
     connections: List[Connection] = [(models[0], models[1])]
@@ -34,6 +36,10 @@ def test_markov_chain_init():
         [1, 0],
         [0, 1]
     ]))
+    assert np.array_equal(M.adjacency, np.array([
+        [0, 1],
+        [0, 0]
+    ]))
 
     K = BeliefBase([Prop.P, Prop.Q], [[Logic.AND, Prop.P, Prop.Q], [Logic.NOT, Prop.Q]])
     connections: List[Connection] = []
@@ -43,6 +49,7 @@ def test_markov_chain_init():
     assert M.agents == []
     assert np.array_equal(M.model_matrix, np.array([]))
     assert np.array_equal(M.coord_matrix, np.array([]))
+    assert np.array_equal(M.adjacency, np.array([]))
 
     K = BeliefBase([Prop.P, Prop.Q, Prop.R], [[Logic.IFF, Prop.R, Logic.IMPLIES, Prop.P, Prop.Q]])
     connections: List[Connection] = [(K.models[0], K.models[1]), (K.models[0], K.models[2])]
@@ -61,4 +68,9 @@ def test_markov_chain_init():
         [0, 1, 0],
         [0, 0, 1],
         [0, 0, 0],
+    ]))
+    assert np.array_equal(M.adjacency, np.array([
+        [0, 1, 1],
+        [0, 0, 0],
+        [0, 0, 0]
     ]))
