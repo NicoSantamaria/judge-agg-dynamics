@@ -6,6 +6,7 @@ from utils.enums import Z2, Prop, Logic
 from utils.types import Connection, Interpretation
 
 
+# should use the test case from test_markov_chain where two agentshave the same model
 def test_graph_init():
     models: List[Interpretation] = [[Z2(1), Z2(0)], [Z2(0), Z2(1)]]
     connections: List[Connection] = []

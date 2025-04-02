@@ -53,14 +53,8 @@ class Graph:
 
 
     def update(self) -> None:
-        results: List[Interpretation | None] = [None] * len(self.agents)
-        for i, agent in enumerate(self.agents):
-            candidates = self.hamming_distance_rule(i)
-            results[i] = choice(candidates)
-
-        if any(res is None for res in results):
-            raise ValueError("Update failed.")
-        self.agents = cast(List[Interpretation], results)
+        self.agents = [choice(self.hamming_distance_rule(i))
+            for i in range(len(self.agents))]
 
 
     def hamming_distance_rule(self, agent: int) -> List[Interpretation]:
@@ -88,13 +82,13 @@ class Graph:
         return candidates
 
     # DEPRECATED: would like to replace this with networkx draw functions
-    def __str__(self):
-        result = "The graph contains the following agents and their models:\n"
+    # def __str__(self):
+    #     result = "The graph contains the following agents and their models:\n"
 
-        for agent, connections in self.graph.items():
-            result += f"Agent {agent.name} with models {agent.model}:\n"
+    #     for agent, connections in self.graph.items():
+    #         result += f"Agent {agent.name} with models {agent.model}:\n"
 
-            for connection in connections:
-                result += f"  Connected to: {connection.name}, Models: {connection.model}\n"
+    #         for connection in connections:
+    #             result += f"  Connected to: {connection.name}, Models: {connection.model}\n"
 
-        return result
+    #     return result
