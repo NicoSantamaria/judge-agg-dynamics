@@ -26,15 +26,17 @@ class Graph:
                 raise ValueError("Agents must be represented by models.")
         self.agents: List[Interpretation] = agents
 
-        for model1, model2 in connections:
-            if model1 not in self.agents or model2 not in self.agents:
+        num_agents: int = len(self.agents)
+        for first_agent, second_agent in connections:
+            if first_agent >= num_agents or second_agent >= num_agents:
                 raise ValueError("Connections can only be drawn between agents.")
         self.connections: List[Connection] = connections
 
 
     def add_connection(self, connection: Connection) -> None:
-        (model1, model2) = connection
-        if model1 not in self.models or model2 not in self.models:
+        (first_agent, second_agent) = connection
+        num_agents: int = len(self.agents)
+        if first_agent >= num_agents or second_agent >= num_agents:
             raise ValueError("Connections can only be drawn between agents.")
         self.connections.append(connection)
 
@@ -46,13 +48,14 @@ class Graph:
 
 
     def complete_graph(self) -> None:
-        self.connections = [(a, b) for a, b in product(self.agents, repeat=2)]
+        num_agents: int = len(self.agents)
+        self.connections = [(a, b) for a, b in product(range(num_agents), repeat=2)]
 
 
     def update(self) -> None:
         results: List[Interpretation | None] = [None] * len(self.agents)
         for i, agent in enumerate(self.agents):
-            candidates = self.hamming_distance_rule(agent)
+            candidates = self.hamming_distance_rule(i)
             results[i] = choice(candidates)
 
         if any(res is None for res in results):
@@ -60,8 +63,9 @@ class Graph:
         self.agents = cast(List[Interpretation], results)
 
 
-    def hamming_distance_rule(self, agent: Interpretation) -> List[Interpretation]:
-        if agent not in self.agents:
+    def hamming_distance_rule(self, agent: int) -> List[Interpretation]:
+        num_agents: int = len(self.agents)
+        if agent < 0 or agent >= num_agents:
             raise ValueError("Agent not found in graph.")
 
         candidates: List[Interpretation] = []
@@ -70,9 +74,10 @@ class Graph:
         for candidate in self.models:
             candidate_distance: int = 0
             for connection in self.connections:
-                (agent_model, connection_model) = connection
-                if agent_model == agent:
-                    candidate_distance += hamming_distance(candidate, connection_model)
+                (first_agent, second_agent) = connection
+                second_agent_model = self.agents[second_agent]
+                if first_agent == agent:
+                    candidate_distance += hamming_distance(candidate, second_agent_model)
 
             if candidate_distance < current_min:
                 candidates = [candidate]
