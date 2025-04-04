@@ -82,9 +82,9 @@ def test_markov_chain_init():
     M = MarkovChain(G)
     assert M.agents == [[Z2(1), Z2(1), Z2(1)], [Z2(0), Z2(0), Z2(0)], [Z2(0), Z2(0), Z2(0)], [Z2(1), Z2(0), Z2(1)]]
     assert np.array_equal(M.model_matrix, np.array([
-        [Z2(1), Z2(0), Z2(0), Z2(1)],
-        [Z2(1), Z2(0), Z2(0), Z2(0)],
-        [Z2(1), Z2(0), Z2(0), Z2(1)]
+        [Z2(1), Z2(0), Z2(1)],
+        [Z2(1), Z2(0), Z2(0)],
+        [Z2(1), Z2(0), Z2(1)]
     ]))
     assert np.array_equal(M.coord_matrix, np.array([
         [Z2(1), Z2(0), Z2(0), Z2(0)],
@@ -94,6 +94,6 @@ def test_markov_chain_init():
     assert np.array_equal(M.adjacency, np.array([
         [Z2(0), Z2(1), Z2(1), Z2(0)],
         [Z2(0), Z2(0), Z2(1), Z2(0)],
-        [Z2(0), Z2(2), Z2(0), Z2(0)],
+        [Z2(0), Z2(1), Z2(0), Z2(0)],
         [Z2(1), Z2(1), Z2(0), Z2(1)]
     ]))

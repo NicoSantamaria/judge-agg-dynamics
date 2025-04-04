@@ -8,6 +8,7 @@ from src.Graph import Graph
 
 # TODO: For experiments, add method to get frequency of all possible end states
 # given a starting state
+# Could handle this more cleanly with multiple dispatching?
 class MarkovChain:
     def __init__(self, graph: Graph) -> None:
         self.agents: List[Interpretation] = graph.agents
@@ -36,7 +37,7 @@ class MarkovChain:
         else:
             self.adjacency: Matrix = np.empty((dim, dim), dtype=object)
             for (i, j) in product(range(dim), repeat=2):
-                if (graph.agents[i], graph.agents[j]) in graph.connections:
+                if (i, j) in graph.connections:
                     self.adjacency[i, j] = Z2.ONE
                 else:
                     self.adjacency[i, j] = Z2.ZERO
