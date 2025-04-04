@@ -10,6 +10,7 @@ from src.Graph import Graph
 # TODO: For experiments, add method to get frequency of all possible end states
 # given a starting state
 # Could handle this more cleanly with multiple dispatching?
+# TODO (immediately): translate and test update_from_state
 class MarkovChain:
     def __init__(self, graph: Graph) -> None:
         self.agents: List[Interpretation] = graph.agents
