@@ -5,7 +5,7 @@ from src.Graph import Graph
 from src.BeliefBase import BeliefBase
 from src.MarkovChain import MarkovChain
 from utils.enums import Z2, Prop, Logic
-from utils.types import Connection, Interpretation
+from utils.types import Connection, Interpretation, MatrixZ2
 
 def test_markov_chain_init():
     # Should probably add one more meaningful test with more models...
@@ -97,3 +97,82 @@ def test_markov_chain_init():
         [Z2(0), Z2(1), Z2(0), Z2(0)],
         [Z2(1), Z2(1), Z2(0), Z2(1)]
     ]))
+
+def test_model_matrix():
+    M = MarkovChain(Graph([], [], []))
+
+    A: MatrixZ2 = np.array([], dtype=object)
+    B: MatrixZ2 = np.array([], dtype=object)
+    print(M.model_distances(A, B))
+    assert np.array_equal(M.model_distances(A, B), np.array([]))
+
+    A: MatrixZ2 = np.array([[Z2(1)]], dtype=object)
+    B: MatrixZ2 = np.array([[Z2(1)]], dtype=object)
+    print(M.model_distances(A, B))
+    assert np.array_equal(M.model_distances(A, B), np.array([[0]]))
+
+    A: MatrixZ2 = np.array([[Z2(1)]], dtype=object)
+    B: MatrixZ2 = np.array([[Z2(0)]], dtype=object)
+    print(M.model_distances(A, B))
+    assert np.array_equal(M.model_distances(A, B), np.array([[1]]))
+
+    A: MatrixZ2 = np.array([
+        [Z2(1), Z2(0)],
+        [Z2(1), Z2(0)]
+    ], dtype=object)
+    B: MatrixZ2 = np.array([
+        [Z2(1), Z2(0)],
+        [Z2(1), Z2(0)],
+    ], dtype=object)
+    print(M.model_distances(A, B))
+    assert np.array_equal(M.model_distances(A, B), np.array([
+        [1, 1],
+        [1, 1]
+    ]))
+
+    A: MatrixZ2 = np.array([
+        [Z2(1), Z2(0), Z2(1)],
+        [Z2(0), Z2(1), Z2(1)]
+    ], dtype=object)
+    B: MatrixZ2 = np.array([
+        [Z2(0), Z2(0)],
+        [Z2(1), Z2(0)],
+        [Z2(0), Z2(1)],
+    ], dtype=object)
+    print(M.model_distances(A, B))
+    assert np.array_equal(M.model_distances(A, B), np.array([
+        [3, 1],
+        [1, 1],
+    ]))
+
+    A: MatrixZ2 = np.array([
+        [Z2(0), Z2(0), Z2(1)],
+        [Z2(1), Z2(0), Z2(0)],
+        [Z2(0), Z2(1), Z2(1)],
+        [Z2(1), Z2(1), Z2(1)],
+    ], dtype=object)
+    B: MatrixZ2 = np.array([
+        [Z2(1), Z2(1), Z2(0)],
+        [Z2(0), Z2(1), Z2(0)],
+        [Z2(0), Z2(1), Z2(1)],
+    ], dtype=object)
+    print(M.model_distances(A, B))
+    assert np.array_equal(M.model_distances(A, B), np.array([
+        [2, 2, 0],
+        [0, 2, 2],
+        [3, 1, 1],
+        [2, 0, 2]
+    ]))
+
+    A: MatrixZ2 = np.array([
+        [Z2(0), Z2(0), Z2(1)],
+        [Z2(1), Z2(0), Z2(0)],
+        [Z2(0), Z2(0), Z2(1)],
+        [Z2(1), Z2(0), Z2(0)],
+    ], dtype=object)
+    B: MatrixZ2 = np.array([
+        [Z2(1), Z2(1), Z2(0)],
+        [Z2(0), Z2(1), Z2(0)],
+    ], dtype=object)
+    with pytest.raises(ValueError, match="Matrices must be compatible for multiplication to find model distances."):
+        M.model_distances(A, B)

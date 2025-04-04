@@ -1,8 +1,9 @@
 import numpy as np
 from itertools import product
 from typing import List
-from utils.types import Interpretation, Matrix, MatrixZ2
+from utils.types import Interpretation, Matrix, MatrixZ2, MatrixShape
 from utils.enums import Z2
+from utils.utils import hamming_distance
 from src.Graph import Graph
 
 
@@ -51,20 +52,19 @@ class MarkovChain:
     # these last methods should be fine, given that they only use Matrix types
     @staticmethod
     def model_distances(mat1: MatrixZ2, mat2: MatrixZ2) -> Matrix:
-        rows: int = mat1.shape[0]
-        cols: int = mat2.shape[1]
-        distance_matrix: Matrix = np.zeros((rows, cols))
+        if np.array_equal(mat1, np.array([])) or np.array_equal(mat2, np.array([])):
+            return np.array([])
+
+        mat1_rows, mat1_cols = mat1.shape
+        mat2_rows, mat2_cols = mat2.shape
+        distance_matrix: Matrix = np.zeros((mat1_rows, mat2_cols))
+
+        if mat1_cols != mat2_rows:
+            raise ValueError("Matrices must be compatible for multiplication to find model distances.")
 
         for i, model1 in enumerate(mat1):
             for j, model2 in enumerate(np.transpose(mat2)):
-                distance: int = 0
-
-                # replace with utils hamming_distance
-                for pos1, pos2 in zip(tuple(model1), tuple(model2)):
-                    if pos1 != pos2:
-                        distance += 1
-
-                distance_matrix[i, j] = distance
+                distance_matrix[i, j] = hamming_distance(model1, model2)
 
         return distance_matrix
 
