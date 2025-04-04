@@ -1,7 +1,7 @@
 import numpy as np
 from itertools import product
 from typing import List
-from utils.types import Interpretation, Matrix, MatrixZ2, MatrixShape
+from utils.types import Interpretation, Matrix, MatrixZ2
 from utils.enums import Z2
 from utils.utils import hamming_distance
 from src.Graph import Graph

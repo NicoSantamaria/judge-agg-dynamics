@@ -8,5 +8,4 @@ type Sentence = List[Logic | Prop]
 type Beliefs = Dict[Prop, Z2]
 type Connection = Tuple[int, int]
 type Matrix = NDArray
-type MatrixShape = Tuple[int, int]
 MatrixZ2: TypeAlias = NDArray[np.object_]
