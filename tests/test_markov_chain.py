@@ -8,7 +8,6 @@ from utils.enums import Z2, Prop, Logic
 from utils.types import Connection, Interpretation, MatrixZ2
 
 def test_markov_chain_init():
-    # Should probably add one more meaningful test with more models...
     models: List[Interpretation] = [[Z2(1), Z2(0)], [Z2(0), Z2(1)]]
     connections: List[Connection] = []
     agents: List[Interpretation] = []
