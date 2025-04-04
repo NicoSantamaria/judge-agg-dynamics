@@ -103,17 +103,14 @@ def test_model_matrix():
 
     A: MatrixZ2 = np.array([], dtype=object)
     B: MatrixZ2 = np.array([], dtype=object)
-    print(M.model_distances(A, B))
     assert np.array_equal(M.model_distances(A, B), np.array([]))
 
     A: MatrixZ2 = np.array([[Z2(1)]], dtype=object)
     B: MatrixZ2 = np.array([[Z2(1)]], dtype=object)
-    print(M.model_distances(A, B))
     assert np.array_equal(M.model_distances(A, B), np.array([[0]]))
 
     A: MatrixZ2 = np.array([[Z2(1)]], dtype=object)
     B: MatrixZ2 = np.array([[Z2(0)]], dtype=object)
-    print(M.model_distances(A, B))
     assert np.array_equal(M.model_distances(A, B), np.array([[1]]))
 
     A: MatrixZ2 = np.array([
@@ -124,7 +121,6 @@ def test_model_matrix():
         [Z2(1), Z2(0)],
         [Z2(1), Z2(0)],
     ], dtype=object)
-    print(M.model_distances(A, B))
     assert np.array_equal(M.model_distances(A, B), np.array([
         [1, 1],
         [1, 1]
@@ -139,7 +135,6 @@ def test_model_matrix():
         [Z2(1), Z2(0)],
         [Z2(0), Z2(1)],
     ], dtype=object)
-    print(M.model_distances(A, B))
     assert np.array_equal(M.model_distances(A, B), np.array([
         [3, 1],
         [1, 1],
@@ -156,7 +151,6 @@ def test_model_matrix():
         [Z2(0), Z2(1), Z2(0)],
         [Z2(0), Z2(1), Z2(1)],
     ], dtype=object)
-    print(M.model_distances(A, B))
     assert np.array_equal(M.model_distances(A, B), np.array([
         [2, 2, 0],
         [0, 2, 2],

@@ -49,7 +49,6 @@ class MarkovChain:
         # self.stationary: Matrix = self.find_stationary(self.state_graph_matrix)
 
 
-    # these last methods should be fine, given that they only use Matrix types
     @staticmethod
     def model_distances(mat1: MatrixZ2, mat2: MatrixZ2) -> Matrix:
         if np.array_equal(mat1, np.array([])) or np.array_equal(mat2, np.array([])):
