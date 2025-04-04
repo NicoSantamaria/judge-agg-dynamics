@@ -8,7 +8,6 @@ from src.Graph import Graph
 
 # TODO: For experiments, add method to get frequency of all possible end states
 # given a starting state
-# rename file MarkovChain?
 class MarkovChain:
     def __init__(self, graph: Graph) -> None:
         self.agents: List[Interpretation] = graph.agents

@@ -23,7 +23,7 @@ def test_markov_chain_init():
     assert np.array_equal(M.adjacency, np.array([]))
 
     models: List[Interpretation] = [[Z2(1), Z2(0)], [Z2(0), Z2(1)]]
-    connections: List[Connection] = [(models[0], models[1])]
+    connections: List[Connection] = [(0, 1)]
     agents: List[Interpretation] = [models[0], models[1]]
     G = Graph(models, connections, agents)
     M = MarkovChain(G)
@@ -52,7 +52,7 @@ def test_markov_chain_init():
     assert np.array_equal(M.adjacency, np.array([]))
 
     K = BeliefBase([Prop.P, Prop.Q, Prop.R], [[Logic.IFF, Prop.R, Logic.IMPLIES, Prop.P, Prop.Q]])
-    connections: List[Connection] = [(K.models[0], K.models[1]), (K.models[0], K.models[2])]
+    connections: List[Connection] = [(0, 1), (0, 2)]
     agents: List[Interpretation] = [K.models[0], K.models[1], K.models[2]]
     G = Graph(K, connections, agents)
     M = MarkovChain(G)
@@ -73,4 +73,27 @@ def test_markov_chain_init():
         [Z2(0), Z2(1), Z2(1)],
         [Z2(0), Z2(0), Z2(0)],
         [Z2(0), Z2(0), Z2(0)]
+    ]))
+
+    models: List[Interpretation] = [[Z2(1), Z2(1), Z2(1)], [Z2(0), Z2(0), Z2(0)], [Z2(1), Z2(0), Z2(1)]]
+    connections: List[Connection] = [(0, 1), (0, 2), (1, 2), (2, 1), (3, 3), (3, 0), (3, 1)]
+    agents: List[Interpretation] = [models[0], models[1], models[1], models[2]]
+    G = Graph(models, connections, agents)
+    M = MarkovChain(G)
+    assert M.agents == [[Z2(1), Z2(1), Z2(1)], [Z2(0), Z2(0), Z2(0)], [Z2(0), Z2(0), Z2(0)], [Z2(1), Z2(0), Z2(1)]]
+    assert np.array_equal(M.model_matrix, np.array([
+        [Z2(1), Z2(0), Z2(0), Z2(1)],
+        [Z2(1), Z2(0), Z2(0), Z2(0)],
+        [Z2(1), Z2(0), Z2(0), Z2(1)]
+    ]))
+    assert np.array_equal(M.coord_matrix, np.array([
+        [Z2(1), Z2(0), Z2(0), Z2(0)],
+        [Z2(0), Z2(1), Z2(1), Z2(0)],
+        [Z2(0), Z2(0), Z2(0), Z2(1)],
+    ]))
+    assert np.array_equal(M.adjacency, np.array([
+        [Z2(0), Z2(1), Z2(1), Z2(0)],
+        [Z2(0), Z2(0), Z2(1), Z2(0)],
+        [Z2(0), Z2(2), Z2(0), Z2(0)],
+        [Z2(1), Z2(1), Z2(0), Z2(1)]
     ]))
