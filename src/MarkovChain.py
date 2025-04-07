@@ -49,6 +49,17 @@ class MarkovChain:
         self.state_graph_matrix: Matrix = self._build_state_graph()
         self.stationary: Matrix = find_stationary(self.state_graph_matrix)
 
+    # needs testing
+    def get_state_models(self, coord_matrix: MatrixZ2 | None=None) -> MatrixZ2:
+        if coord_matrix is None:
+            coord_matrix = self.coord_matrix
+
+        if self.model_matrix.shape == 0 == coord_matrix.shape:
+            return np.array([])
+        elif self.model_matrix.shape[1] != coord_matrix.shape[0]:
+            raise ValueError("Model and coord matrices must be compatible for matrix multiplication.")
+        return np.matmul(self.model_matrix, coord_matrix)
+
 
     @staticmethod
     def model_distances(mat1: MatrixZ2, mat2: MatrixZ2) -> Matrix:
