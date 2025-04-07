@@ -110,7 +110,7 @@ def matrix_to_matrix_z2(mat: Matrix) -> MatrixZ2:
     return res
 
 def find_stationary(mat: Matrix) -> Matrix:
-    stationary = np.linalg.matrix_power(mat, 10000)
+    stationary = np.linalg.matrix_power(mat, 1_000_000)
     stationary = np.where(
         np.isclose(stationary, 0), 0, stationary
     )
