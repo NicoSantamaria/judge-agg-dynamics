@@ -1,6 +1,6 @@
 import numpy as np
 from itertools import product
-from typing import List, Dict, cast
+from typing import List, Tuple, cast
 from utils.types import Interpretation, Matrix, MatrixZ2
 from utils.enums import Z2
 from utils.utils import (hamming_distance, matrix_z2_to_matrix,
@@ -43,6 +43,9 @@ class MarkovChain:
                 else:
                     self.adjacency[i, j] = Z2.ZERO
 
+        # we probably don't want to have to call states of state_graph_matrix until
+        # necessary for performance reasons, since those are the most expensive
+        # operations
         self.states: List[MatrixZ2] = self._get_possible_states(
             np.full(self.coord_matrix.shape, Z2.ONE, dtype=object)
         )
@@ -63,19 +66,23 @@ class MarkovChain:
 
     # needs testing
     # needs support for pretty printing
-    def get_result_by_state(self, coord_matrix: MatrixZ2 | None=None) -> Dict[float, MatrixZ2]:
+    # define return type for readability?
+    # also would like to view results by agent
+    def get_result_by_state(self, coord_matrix: MatrixZ2 | None=None) -> List[Tuple[float, MatrixZ2]]:
         if coord_matrix is None:
             coord_matrix = self.coord_matrix
 
-        results: Dict[float, MatrixZ2] = dict()
+        results: List[Tuple[float, MatrixZ2]] = []
         for i, state in enumerate(self.states):
             if np.array_equal(coord_matrix, state):
                 end_state_probs = self.stationary[i]
                 for end_state_index, end_state_prob in enumerate(end_state_probs):
+                    end_state_prob = cast(float, end_state_prob)
                     if end_state_prob != 0:
-                        results[end_state_prob] = self.get_state_models(
-                            self.states[end_state_index]
-                        )
+                        results.append((
+                            end_state_prob,
+                            self.get_state_models(self.states[end_state_index])
+                        ))
         return results
 
     @staticmethod
