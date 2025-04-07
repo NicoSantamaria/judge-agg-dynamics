@@ -10,7 +10,6 @@ from src.Graph import Graph
 # TODO: For experiments, add method to get frequency of all possible end states
 # given a starting state
 # Could handle this more cleanly with multiple dispatching?
-# TODO (immediately): translate and test update_from_state
 class MarkovChain:
     def __init__(self, graph: Graph) -> None:
         self.agents: List[Interpretation] = graph.agents
@@ -94,26 +93,26 @@ class MarkovChain:
         return matrix_to_matrix_z2(next_coord_matrix)
 
 
-    @staticmethod
-    def _get_possible_states(next_coord_matrix: Matrix) -> List[Matrix]:
-        # Get the positions where 1s are in the original array
-        ones_positions = []
-        for col in range(next_coord_matrix.shape[1]):
-            # Get the row indices where there are 1s in this column
-            rows_with_ones = np.where(next_coord_matrix[:, col] == 1.)[0]
+    def _get_possible_states(self, next_coord_matrix: MatrixZ2) -> List[MatrixZ2]:
+        if next_coord_matrix.shape != self.coord_matrix.shape:
+            raise ValueError("Coordinate matrices must have same dimensions.")
+        elif np.array_equal(next_coord_matrix, np.array([])):
+            return []
+        # can I use where function with enum? Then no need to translate back and forth
+        # from MatrixZ2 to Matrix
+        coord_matrix: Matrix = matrix_z2_to_matrix(next_coord_matrix)
+        ones_positions: List[Matrix] = []
+        for col in range(coord_matrix.shape[1]):
+            rows_with_ones: Matrix = np.where(next_coord_matrix[:, col] == 1.)[0]
             ones_positions.append(rows_with_ones)
 
         # Generate all combinations using the cartesian product
-        valid_arrays = []
+        valid_arrays: List[MatrixZ2] = []
         for combo in product(*ones_positions):
-            # Create a zero array of the same shape as original
-            new_arr = np.zeros_like(next_coord_matrix)
-
-            # Place 1s at the selected positions
+            new_arr = np.zeros_like(coord_matrix)
             for col, row in enumerate(combo):
                 new_arr[row, col] = 1.
-
-            valid_arrays.append(new_arr)
+            valid_arrays.append(matrix_to_matrix_z2(new_arr))
 
         return valid_arrays
 

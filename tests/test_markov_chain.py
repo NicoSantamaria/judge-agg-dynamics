@@ -5,7 +5,7 @@ from src.Graph import Graph
 from src.BeliefBase import BeliefBase
 from src.MarkovChain import MarkovChain
 from utils.enums import Z2, Prop, Logic
-from utils.types import Connection, Interpretation, MatrixZ2
+from utils.types import Connection, Interpretation, MatrixZ2, Matrix
 
 def test_markov_chain_init():
     models: List[Interpretation] = [[Z2(1), Z2(0)], [Z2(0), Z2(1)]]
@@ -196,3 +196,32 @@ def test_update_from_state():
             [Z2(1), Z2(1)],
             [Z2(0), Z2(0)]
         ]))
+
+def test_get_possible_states():
+    M = MarkovChain(Graph([], [], []))
+    next_states: List[MatrixZ2] = []
+    for i, coord_matrix in enumerate(M._get_possible_states(np.array([]))):
+        assert np.array_equal(next_states[i], coord_matrix)
+
+    models: List[Interpretation] = [[Z2(1), Z2(0)], [Z2(0), Z2(1)]]
+    connections: List[Connection] = [(0, 1)]
+    agents: List[Interpretation] = [models[0], models[1]]
+    G = Graph(models, connections, agents)
+    M = MarkovChain(G)
+    next_states: List[MatrixZ2] = [
+        np.array([[Z2(1), Z2(0)], [Z2(0), Z2(1)]])
+    ]
+    next_coord_matrix = np.array([[Z2(1), Z2(0)], [Z2(0), Z2(1)]])
+    for i, coord_matrix in enumerate(M._get_possible_states(next_coord_matrix)):
+        assert np.array_equal(next_states[i], coord_matrix)
+
+    next_states: List[MatrixZ2] = [
+        np.array([[Z2(1), Z2(0)], [Z2(0), Z2(1)]]),
+        np.array([[Z2(0), Z2(1)], [Z2(0), Z2(1)]]),
+    ]
+    next_coord_matrix = np.array([[Z2(1), Z2(1)], [Z2(0), Z2(1)]])
+    for i, coord_matrix in enumerate(M._get_possible_states(next_coord_matrix)):
+        assert np.array_equal(next_states[i], coord_matrix)
+
+    with pytest.raises(ValueError, match="Coordinate matrices must have same dimensions."):
+        M._get_possible_states(np.array([Z2(1)]))
