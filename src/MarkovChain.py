@@ -51,7 +51,7 @@ class MarkovChain:
 
     @staticmethod
     def model_distances(mat1: MatrixZ2, mat2: MatrixZ2) -> Matrix:
-        if np.array_equal(mat1, np.array([])) or np.array_equal(mat2, np.array([])):
+        if mat1.size == 0 or mat2.size == 0:
             return np.array([])
 
         mat1_rows, mat1_cols = mat1.shape
@@ -71,10 +71,10 @@ class MarkovChain:
 
 
     def update_from_state(self, coord_matrix: Matrix) -> Matrix:
-        if coord_matrix.shape != self.coord_matrix.shape:
-            raise ValueError("Coordinate matrices must have same dimensions.")
-        elif np.array_equal(coord_matrix, np.array([])):
+        if coord_matrix.size == 0 == self.coord_matrix.size:
             return np.array([])
+        elif coord_matrix.shape != self.coord_matrix.shape:
+            raise ValueError("Coordinate matrices must have same dimensions.")
 
         distances: Matrix = np.matmul(
             self.model_distances(
@@ -94,10 +94,10 @@ class MarkovChain:
 
 
     def _get_possible_states(self, next_coord_matrix: MatrixZ2) -> List[MatrixZ2]:
+        if next_coord_matrix.size == 0 == self.coord_matrix.size:
+            return []
         if next_coord_matrix.shape != self.coord_matrix.shape:
             raise ValueError("Coordinate matrices must have same dimensions.")
-        elif np.array_equal(next_coord_matrix, np.array([])):
-            return []
 
         coord_matrix: Matrix = matrix_z2_to_matrix(next_coord_matrix)
         ones_positions: List[Matrix] = []
