@@ -1,6 +1,7 @@
+import numpy as np
 from typing import List
 # remove beliefs
-from utils.types import Interpretation, Sentence, Beliefs
+from utils.types import Interpretation, Sentence, Beliefs, Matrix, MatrixZ2
 from utils.enums import Prop, Logic, Z2
 
 
@@ -81,3 +82,15 @@ def evaluate_sentence(atoms: List[Prop], interpretation: Interpretation, sentenc
             stack.append(interp[symbol])
 
     return bool(stack[0])
+
+def matrix_z2_to_matrix(mat: MatrixZ2) -> Matrix:
+    if np.array_equal(mat, np.array([])):
+        return np.array([])
+
+    rows, cols = mat.shape
+    res = np.ones((rows, cols))
+    for i in range(rows):
+        for j in range(cols):
+            if mat[i, j] == Z2.ZERO:
+                res[i, j] = 0
+    return res

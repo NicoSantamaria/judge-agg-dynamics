@@ -1,5 +1,7 @@
 import pytest
-from utils.utils import hamming_distance, evaluate_sentence, ints_to_interpretation, interpretation_to_ints, strs_to_sentence, use_operation
+import numpy as np
+from utils.utils import (hamming_distance, evaluate_sentence, ints_to_interpretation,
+    interpretation_to_ints, strs_to_sentence, use_operation, matrix_z2_to_matrix)
 from utils.enums import Z2, Logic, Prop
 
 
@@ -68,3 +70,29 @@ def test_use_operation():
 
     with pytest.raises(ValueError, match="AND, OR, IFF, and IMPLIES operations take exactly 2 arguments."):
         use_operation(Logic.AND, Z2(0))
+
+def test_matrix_z2_to_matrix():
+    assert np.array_equal(
+        matrix_z2_to_matrix(np.array([], dtype=object)),
+        np.array([])
+    )
+
+    assert np.array_equal(
+        matrix_z2_to_matrix(np.array([
+            [Z2(1), Z2(0), Z2(1)],
+            [Z2(1), Z2(0), Z2(1)],
+        ], dtype=object)),
+        np.array([
+            [1, 0, 1],
+            [1, 0, 1]
+        ])
+    )
+
+    assert np.array_equal(
+        matrix_z2_to_matrix(np.array([
+            [Z2(3), Z2(2), Z2(1)],
+        ], dtype=object)),
+        np.array([
+            [1, 0, 1],
+        ])
+    )
