@@ -4,6 +4,7 @@ from utils.utils import evaluate_sentence
 from utils.enums import Z2, Prop, Logic
 from utils.types import Sentence, Interpretation
 
+
 # TODO: allow input by strs instead of props
 class BeliefBase:
     def __init__(self, atoms: List[Prop], constraints: List[Sentence]=list()) -> None:
@@ -11,7 +12,9 @@ class BeliefBase:
         self.constraints: Sentence = self.get_constraints(constraints)
         self.models: List[Interpretation] = self.get_models()
 
-    def get_constraints(self, constraints: List[Sentence]) -> Sentence:
+
+    @staticmethod
+    def get_constraints(constraints: List[Sentence]) -> Sentence:
         if not constraints:
             return list()
 
@@ -19,6 +22,7 @@ class BeliefBase:
         for sentence in constraints[1:]:
             constraint_sentence = [Logic.AND] + constraint_sentence + sentence
         return constraint_sentence
+
 
     def get_models(self) -> List[Interpretation]:
         models: List[Interpretation] = list()
