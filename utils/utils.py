@@ -4,7 +4,8 @@ from typing import List
 from utils.types import Interpretation, Sentence, Beliefs, Matrix, MatrixZ2
 from utils.enums import Prop, Logic, Z2
 
-
+# TODO: remove beliefs from evaluate_sentence
+# TODO: See if can simplify matrix utils with where
 def hamming_distance(vec1: Interpretation, vec2: Interpretation) -> int:
     if len(vec1) != len(vec2):
         raise ValueError("List lengths are not equal.")
@@ -109,7 +110,7 @@ def matrix_to_matrix_z2(mat: Matrix) -> MatrixZ2:
     return res
 
 def find_stationary(mat: Matrix) -> Matrix:
-    stationary = np.linalg.matrix_power(mat, 1000)
+    stationary = np.linalg.matrix_power(mat, 10000)
     stationary = np.where(
         np.isclose(stationary, 0), 0, stationary
     )

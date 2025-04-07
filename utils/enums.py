@@ -1,6 +1,7 @@
 from enum import Enum
 
 
+# TODO: print pretty with integers
 class Z2(Enum):
     ZERO = 0
     ONE = 1

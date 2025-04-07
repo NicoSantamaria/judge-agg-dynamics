@@ -9,9 +9,7 @@ from src.Graph import Graph
 
 
 # TODO: For experiments, add method to get frequency of all possible end states
-# given a starting state
-# Could handle this more cleanly with multiple dispatching?
-# TODO: immediate next step: implement and test state_graph
+# TODO: get result by state
 class MarkovChain:
     def __init__(self, graph: Graph) -> None:
         self.agents: List[Interpretation] = graph.agents
@@ -73,7 +71,7 @@ class MarkovChain:
         return distance_matrix
 
 
-    def update_from_state(self, coord_matrix: Matrix) -> Matrix:
+    def update_from_state(self, coord_matrix: MatrixZ2) -> MatrixZ2:
         if coord_matrix.size == 0 == self.coord_matrix.size:
             return np.array([])
         elif coord_matrix.shape != self.coord_matrix.shape:
@@ -123,7 +121,7 @@ class MarkovChain:
         state_graph_matrix: Matrix = np.zeros((dim, dim))
 
         for i, state in enumerate(self.states):
-            next_states = self._get_possible_states(
+            next_states: List[MatrixZ2] = self._get_possible_states(
                 self.update_from_state(state)
             )
 
