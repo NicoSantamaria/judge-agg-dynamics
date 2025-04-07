@@ -15,7 +15,7 @@ def test_graph_init():
     assert G.models == models
 
     models: List[Interpretation] = [[Z2(1), Z2(0)], [Z2(0), Z2(1)]]
-    connections: List[Connection] = [([0, 1])]
+    connections: List[Connection] = [(0, 1)]
     agents: List[Interpretation] = [models[0], models[1]]
     G = Graph(models, connections, agents)
     assert G.models == models

@@ -1,9 +1,9 @@
 import numpy as np
 from itertools import product
-from typing import List
+from typing import List, cast
 from utils.types import Interpretation, Matrix, MatrixZ2
 from utils.enums import Z2
-from utils.utils import hamming_distance
+from utils.utils import hamming_distance, ints_to_interpretation
 from src.Graph import Graph
 
 
@@ -35,9 +35,9 @@ class MarkovChain:
 
         dim: int = len(self.agents)
         if dim == 0:
-            self.adjacency = np.array([])
+            self.adjacency: MatrixZ2 = np.array([])
         else:
-            self.adjacency: Matrix = np.empty((dim, dim), dtype=object)
+            self.adjacency: MatrixZ2 = np.empty((dim, dim), dtype=object)
             for (i, j) in product(range(dim), repeat=2):
                 if (i, j) in graph.connections:
                     self.adjacency[i, j] = Z2.ONE
@@ -64,6 +64,8 @@ class MarkovChain:
 
         for i, model1 in enumerate(mat1):
             for j, model2 in enumerate(np.transpose(mat2)):
+                model1 = cast(Interpretation, model1)
+                model2 = cast(Interpretation, model2)
                 distance_matrix[i, j] = hamming_distance(model1, model2)
 
         return distance_matrix
