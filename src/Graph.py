@@ -8,6 +8,7 @@ from src.BeliefBase import BeliefBase
 # TODO: use networkx library to get graphics of each graph
 # TODO: Allow input by integers
 # TODO: implement networkx to draw nice graphs
+# TODO: switch order of agents and connections and allow connection to be empty
 class Graph:
     def __init__(self,
         models: List[Interpretation] | BeliefBase,
