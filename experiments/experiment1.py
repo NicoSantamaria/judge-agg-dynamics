@@ -1,4 +1,3 @@
-import numpy as np
 from utils.enums import Z2, Prop, Logic
 from src.BeliefBase import BeliefBase
 from src.MarkovChain import MarkovChain
