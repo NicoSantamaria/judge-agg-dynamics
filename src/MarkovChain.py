@@ -10,6 +10,10 @@ from src.Graph import Graph
 
 # TODO: For experiments, add method to get frequency of all possible end states
 # TODO: get result by state
+# TODO: test get_state_models and get_result_by_state
+# TODO: Pretty printing and by_agent option for get_result_by_state
+# TODO: Do not build states, state_graph_matrix and stationary until necessary
+# TODO: function to get result for single iteration of distance rule?
 class MarkovChain:
     def __init__(self, graph: Graph) -> None:
         self.agents: List[Interpretation] = graph.agents
@@ -64,10 +68,6 @@ class MarkovChain:
         return np.matmul(self.model_matrix, coord_matrix)
 
 
-    # needs testing
-    # needs support for pretty printing
-    # define return type for readability?
-    # also would like to view results by agent
     def get_result_by_state(self, coord_matrix: MatrixZ2 | None=None) -> List[Tuple[float, MatrixZ2]]:
         if coord_matrix is None:
             coord_matrix = self.coord_matrix
@@ -85,6 +85,7 @@ class MarkovChain:
                         ))
         return results
 
+
     @staticmethod
     def model_distances(mat1: MatrixZ2, mat2: MatrixZ2) -> Matrix:
         if mat1.size == 0 or mat2.size == 0:
@@ -93,7 +94,6 @@ class MarkovChain:
         mat1_rows, mat1_cols = mat1.shape
         mat2_rows, mat2_cols = mat2.shape
         distance_matrix: Matrix = np.zeros((mat1_rows, mat2_cols))
-
         if mat1_cols != mat2_rows:
             raise ValueError("Matrices must be compatible for multiplication to find model distances.")
 
@@ -154,7 +154,6 @@ class MarkovChain:
     def _build_state_graph(self) -> Matrix:
         dim: int = len(self.states)
         state_graph_matrix: Matrix = np.zeros((dim, dim))
-
         for i, state in enumerate(self.states):
             next_states: List[MatrixZ2] = self._get_possible_states(
                 self.update_from_state(state)
