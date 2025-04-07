@@ -83,6 +83,7 @@ def evaluate_sentence(atoms: List[Prop], interpretation: Interpretation, sentenc
 
     return bool(stack[0])
 
+# can improve with where method?
 def matrix_z2_to_matrix(mat: MatrixZ2) -> Matrix:
     if np.array_equal(mat, np.array([])):
         return np.array([])
@@ -95,6 +96,7 @@ def matrix_z2_to_matrix(mat: MatrixZ2) -> Matrix:
                 res[i, j] = 0
     return res
 
+# can improve with where method?
 def matrix_to_matrix_z2(mat: Matrix) -> MatrixZ2:
     if np.array_equal(mat, np.array([])):
         return np.array([])
@@ -103,8 +105,5 @@ def matrix_to_matrix_z2(mat: Matrix) -> MatrixZ2:
     res: MatrixZ2 = np.empty((rows, cols), dtype=object)
     for i in range(rows):
         for j in range(cols):
-            if mat[i, j] == 0:
-                res[i, j] = Z2.ZERO
-            else:
-                res[i, j] = Z2.ONE
+            res[i, j] = Z2(mat[i, j])
     return res
