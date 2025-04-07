@@ -169,3 +169,30 @@ def test_model_matrix():
     ], dtype=object)
     with pytest.raises(ValueError, match="Matrices must be compatible for multiplication to find model distances."):
         M.model_distances(A, B)
+
+def test_update_from_state():
+    M = MarkovChain(Graph([], [], []))
+    assert np.array_equal(M.update_from_state(np.array([])), np.array([]))
+
+    K = BeliefBase([Prop.P, Prop.Q, Prop.R], [[Logic.IFF, Prop.R, Logic.IMPLIES, Prop.P, Prop.Q]])
+    G = Graph(K,
+        [(0, 0), (0, 1), (0, 2), (1, 1), (1, 0), (2, 2)],
+        [[Z2(1), Z2(0), Z2(0)], [Z2(1), Z2(1), Z2(1)], [Z2(0), Z2(0), Z2(1)]]
+    )
+    M = MarkovChain(G)
+    print(M.coord_matrix)
+    assert np.array_equal(
+        M.update_from_state(M.coord_matrix),
+        np.array([
+            [Z2(1), Z2(0), Z2(1)],
+            [Z2(0), Z2(0), Z2(0)],
+            [Z2(1), Z2(1), Z2(0)],
+            [Z2(1), Z2(1), Z2(0)],
+        ])
+    )
+
+    with pytest.raises(ValueError, match="Coordinate matrices must have same dimensions."):
+        M.update_from_state(np.array([
+            [Z2(1), Z2(1)],
+            [Z2(0), Z2(0)]
+        ]))

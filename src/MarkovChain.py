@@ -3,7 +3,7 @@ from itertools import product
 from typing import List, cast
 from utils.types import Interpretation, Matrix, MatrixZ2
 from utils.enums import Z2
-from utils.utils import hamming_distance, ints_to_interpretation
+from utils.utils import hamming_distance, matrix_z2_to_matrix, matrix_to_matrix_z2
 from src.Graph import Graph
 
 
@@ -72,32 +72,26 @@ class MarkovChain:
 
 
     def update_from_state(self, coord_matrix: Matrix) -> Matrix:
+        if coord_matrix.shape != self.coord_matrix.shape:
+            raise ValueError("Coordinate matrices must have same dimensions.")
+        elif np.array_equal(coord_matrix, np.array([])):
+            return np.array([])
+
         distances: Matrix = np.matmul(
             self.model_distances(
                 np.transpose(self.model_matrix),
-                np.matmul(
-                    self.model_matrix,
-                    coord_matrix
-                )
+                np.matmul(self.model_matrix, coord_matrix)
             ),
-            np.transpose(self.adjacency)
+            matrix_z2_to_matrix(np.transpose(self.adjacency))
         )
 
-        # Find minimum value in each column
-        min_vals = np.min(distances, axis=0)  # axis=0 means operate along columns
-
-        # Create a new array with the same shape as the original
-        # Fill with 1 where value equals the column minimum, 0 elsewhere
+        min_vals = np.min(distances, axis=0)
         next_coord_matrix = np.zeros_like(distances)
-
-        # For each column
         for col in range(distances.shape[1]):
-            # Create a boolean mask where the value equals the minimum for this column
             min_mask = (distances[:, col] == min_vals[col])
-            # Set those positions to 1 in the result array
             next_coord_matrix[:, col] = min_mask.astype(int)
 
-        return next_coord_matrix
+        return matrix_to_matrix_z2(next_coord_matrix)
 
 
     @staticmethod
