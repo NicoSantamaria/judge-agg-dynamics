@@ -14,6 +14,15 @@ def experiment2():
     the number of models that might be adopted after a single iteration
     of the distance-based rule. In this way, the Markov Chain analysis
     narrows the space of reasonable collective judgments.
+
+    DESCRIPTION: Complete graph with highly symmetric models to induce
+    ties on the first iteration of the distance-based rule. Does the Markov
+    Chain method allow us to narrow the space of possible models for each
+    agent?
+
+    FINDINGS: Yes. After one iteration, any agent can adopt each of the
+    5 models. After many iterations, each of the agents will have one of
+    only 2 models, with equal probability (all 0s or all 1s)
     :return:
     """
     models: List[Interpretation] = [
