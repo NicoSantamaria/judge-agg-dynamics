@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 from utils.utils import (hamming_distance, evaluate_sentence, ints_to_interpretation,
-    interpretation_to_ints, strs_to_sentence, use_operation, matrix_z2_to_matrix)
+    interpretation_to_ints, strs_to_sentence, use_operation, matrix_z2_to_matrix, matrix_to_matrix_z2)
 from utils.enums import Z2, Logic, Prop
 
 
@@ -96,3 +96,30 @@ def test_matrix_z2_to_matrix():
             [1, 0, 1],
         ])
     )
+
+def test_matrix_to_matrix_z2():
+    assert np.array_equal(
+        matrix_to_matrix_z2(np.array([], dtype=object)),
+        np.array([])
+    )
+
+    assert np.array_equal(
+        np.array([
+            [Z2(1), Z2(0), Z2(1)],
+            [Z2(1), Z2(0), Z2(1)],
+        ], dtype=object),
+        matrix_to_matrix_z2(np.array([
+            [1, 0, 1],
+            [1, 0, 1]
+        ]))
+    )
+
+    assert np.array_equal(
+        np.array([
+            [Z2(3), Z2(2), Z2(1)],
+        ], dtype=object),
+        matrix_to_matrix_z2(np.array([
+            [1, 0, 1],
+        ]))
+    )
+

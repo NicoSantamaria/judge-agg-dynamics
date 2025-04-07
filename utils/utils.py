@@ -94,3 +94,17 @@ def matrix_z2_to_matrix(mat: MatrixZ2) -> Matrix:
             if mat[i, j] == Z2.ZERO:
                 res[i, j] = 0
     return res
+
+def matrix_to_matrix_z2(mat: Matrix) -> MatrixZ2:
+    if np.array_equal(mat, np.array([])):
+        return np.array([])
+
+    rows, cols = mat.shape
+    res: MatrixZ2 = np.empty((rows, cols), dtype=object)
+    for i in range(rows):
+        for j in range(cols):
+            if mat[i, j] == 0:
+                res[i, j] = Z2.ZERO
+            else:
+                res[i, j] = Z2.ONE
+    return res
