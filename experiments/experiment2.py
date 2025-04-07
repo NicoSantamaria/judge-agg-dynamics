@@ -8,6 +8,14 @@ from src.Graph import Graph
 
 
 def experiment2():
+    """
+    CONJECTURE: For each agent in a graph, the number of most frequent
+    models after many iterations will always be less than or equal to
+    the number of models that might be adopted after a single iteration
+    of the distance-based rule. In this way, the Markov Chain analysis
+    narrows the space of reasonable collective judgments.
+    :return:
+    """
     models: List[Interpretation] = [
         [Z2(0), Z2(0), Z2(0), Z2(0), Z2(0)],
         [Z2(1), Z2(1), Z2(1), Z2(1), Z2(1)],
