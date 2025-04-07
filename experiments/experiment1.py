@@ -18,17 +18,8 @@ def run_experiment():
         ]
     )
     M = MarkovChain(G)
-    print('started!')
 
-    # make this a method in Markov Chain? To find results by input state
-    # def get_result_by_state(): ...
-    # should accept input by coord_matrix or model matrix
-    for i, state in enumerate(M.states):
-        if np.array_equal(M.coord_matrix, state):
-            end_states = M.stationary[i]
-            for j, end_state in enumerate(end_states):
-                if end_state != 0:
-                    print('Probability:', end_state)
-                    print(np.matmul(M.model_matrix, M.states[j]))
+    # ugly printing
+    print(M.get_result_by_state())
 
 run_experiment()
