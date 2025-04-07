@@ -216,10 +216,19 @@ def test_get_possible_states():
         assert np.array_equal(next_states[i], coord_matrix)
 
     next_states: List[MatrixZ2] = [
-        np.array([[Z2(1), Z2(0)], [Z2(0), Z2(1)]]),
-        np.array([[Z2(0), Z2(1)], [Z2(0), Z2(1)]]),
+        np.array([
+            [Z2(1), Z2(1)],
+            [Z2(0), Z2(0)]
+        ]),
+        np.array([
+            [Z2(1), Z2(0)],
+            [Z2(0), Z2(1)]
+        ]),
     ]
-    next_coord_matrix = np.array([[Z2(1), Z2(1)], [Z2(0), Z2(1)]])
+    next_coord_matrix = np.array([
+        [Z2(1), Z2(1)],
+        [Z2(0), Z2(1)]
+    ])
     for i, coord_matrix in enumerate(M._get_possible_states(next_coord_matrix)):
         assert np.array_equal(next_states[i], coord_matrix)
 

@@ -44,7 +44,9 @@ class MarkovChain:
                     self.adjacency[i, j] = Z2.ZERO
 
 
-        # self.states: List[Matrix] = self._get_possible_states(np.ones(self.coord_matrix.shape))
+        self.states: List[Matrix] = self._get_possible_states(
+            np.full(self.coord_matrix.shape, Z2.ONE, dtype=object)
+        )
         # self.state_graph_matrix: Matrix = self._build_state_graph()
         # self.stationary: Matrix = self.find_stationary(self.state_graph_matrix)
 
@@ -102,7 +104,7 @@ class MarkovChain:
         coord_matrix: Matrix = matrix_z2_to_matrix(next_coord_matrix)
         ones_positions: List[Matrix] = []
         for col in range(coord_matrix.shape[1]):
-            rows_with_ones: Matrix = np.where(next_coord_matrix[:, col] == 1.)[0]
+            rows_with_ones: Matrix = np.where(coord_matrix[:, col] == 1.)[0]
             ones_positions.append(rows_with_ones)
 
         valid_arrays: List[MatrixZ2] = []
