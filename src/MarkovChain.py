@@ -3,13 +3,15 @@ from itertools import product
 from typing import List, cast
 from utils.types import Interpretation, Matrix, MatrixZ2
 from utils.enums import Z2
-from utils.utils import hamming_distance, matrix_z2_to_matrix, matrix_to_matrix_z2
+from utils.utils import (hamming_distance, matrix_z2_to_matrix,
+                         matrix_to_matrix_z2, find_stationary)
 from src.Graph import Graph
 
 
 # TODO: For experiments, add method to get frequency of all possible end states
 # given a starting state
 # Could handle this more cleanly with multiple dispatching?
+# TODO: immediate next step: implement and test state_graph
 class MarkovChain:
     def __init__(self, graph: Graph) -> None:
         self.agents: List[Interpretation] = graph.agents
@@ -43,12 +45,11 @@ class MarkovChain:
                 else:
                     self.adjacency[i, j] = Z2.ZERO
 
-
-        self.states: List[Matrix] = self._get_possible_states(
+        self.states: List[MatrixZ2] = self._get_possible_states(
             np.full(self.coord_matrix.shape, Z2.ONE, dtype=object)
         )
-        # self.state_graph_matrix: Matrix = self._build_state_graph()
-        # self.stationary: Matrix = self.find_stationary(self.state_graph_matrix)
+        self.state_graph_matrix: Matrix = self._build_state_graph()
+        self.stationary: Matrix = find_stationary(self.state_graph_matrix)
 
 
     @staticmethod
@@ -126,19 +127,10 @@ class MarkovChain:
                 self.update_from_state(state)
             )
 
-            probability = 1 / len(next_states)
-
             for j in range(dim):
                 for next_state in next_states:
                     if np.array_equal(self.states[j], next_state):
-                        state_graph_matrix[i, j] = probability
+                        state_graph_matrix[i, j] = 1 / len(next_states)
 
         return state_graph_matrix
 
-
-    def find_stationary(self, mat: Matrix) -> Matrix:
-        stationary = np.linalg.matrix_power(mat, 1000)
-        stationary = np.where(
-            np.isclose(stationary, 0), 0, stationary
-        )
-        return stationary

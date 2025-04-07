@@ -107,3 +107,10 @@ def matrix_to_matrix_z2(mat: Matrix) -> MatrixZ2:
         for j in range(cols):
             res[i, j] = Z2(mat[i, j])
     return res
+
+def find_stationary(mat: Matrix) -> Matrix:
+    stationary = np.linalg.matrix_power(mat, 1000)
+    stationary = np.where(
+        np.isclose(stationary, 0), 0, stationary
+    )
+    return stationary
