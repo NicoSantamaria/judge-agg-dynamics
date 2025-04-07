@@ -1,6 +1,6 @@
 import numpy as np
 from itertools import product
-from typing import List, cast
+from typing import List, Dict, cast
 from utils.types import Interpretation, Matrix, MatrixZ2
 from utils.enums import Z2
 from utils.utils import (hamming_distance, matrix_z2_to_matrix,
@@ -60,6 +60,23 @@ class MarkovChain:
             raise ValueError("Model and coord matrices must be compatible for matrix multiplication.")
         return np.matmul(self.model_matrix, coord_matrix)
 
+
+    # needs testing
+    # needs support for pretty printing
+    def get_result_by_state(self, coord_matrix: MatrixZ2 | None=None) -> Dict[float, MatrixZ2]:
+        if coord_matrix is None:
+            coord_matrix = self.coord_matrix
+
+        results: Dict[float, MatrixZ2] = dict()
+        for i, state in enumerate(self.states):
+            if np.array_equal(coord_matrix, state):
+                end_state_probs = self.stationary[i]
+                for end_state_index, end_state_prob in enumerate(end_state_probs):
+                    if end_state_prob != 0:
+                        results[end_state_prob] = self.get_state_models(
+                            self.states[end_state_index]
+                        )
+        return results
 
     @staticmethod
     def model_distances(mat1: MatrixZ2, mat2: MatrixZ2) -> Matrix:
