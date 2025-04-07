@@ -98,15 +98,13 @@ class MarkovChain:
             raise ValueError("Coordinate matrices must have same dimensions.")
         elif np.array_equal(next_coord_matrix, np.array([])):
             return []
-        # can I use where function with enum? Then no need to translate back and forth
-        # from MatrixZ2 to Matrix
+
         coord_matrix: Matrix = matrix_z2_to_matrix(next_coord_matrix)
         ones_positions: List[Matrix] = []
         for col in range(coord_matrix.shape[1]):
             rows_with_ones: Matrix = np.where(next_coord_matrix[:, col] == 1.)[0]
             ones_positions.append(rows_with_ones)
 
-        # Generate all combinations using the cartesian product
         valid_arrays: List[MatrixZ2] = []
         for combo in product(*ones_positions):
             new_arr = np.zeros_like(coord_matrix)
