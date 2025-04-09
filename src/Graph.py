@@ -21,6 +21,10 @@ class Graph:
         graph. Agents are represented by vertices in the graph.
 
     REFERENCES:
+    [1] Christian List. The theory of judgment aggregation: An introductory
+            review. Synthese, 187(1):179–207, 2012.
+    [2] Antonio F. Peralta, János Kertésza, and Gerardo Iñigueza. Opinion dynamics
+            in social networks: From models to data. Preprint, 2022. https://arxiv.org/abs/2201.01322
     """
     def __init__(self,
         models: List[Interpretation] | BeliefBase,
