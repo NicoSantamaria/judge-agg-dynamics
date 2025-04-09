@@ -24,6 +24,8 @@ class BeliefBase:
     [1] Gabriella Pigozzi. Belief merging and the discursive dilemma: an
             argument-based account to paradoxes of judgment aggregation. Synthese,
             152(2):285–98, 2006.
+    [2] Christian List. The theory of judgment aggregation: An introductory
+            review. Synthese, 187(1):179–207, 2012.
     """
     def __init__(self, atoms: List[Prop], constraints: List[Sentence]=list()) -> None:
         self.atoms: List[Prop] = atoms
