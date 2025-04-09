@@ -86,6 +86,13 @@ class Graph:
 
 
     def update(self) -> None:
+        """
+        Applies the Hamming distance-based rule to update the beliefs of each
+        agent in the graph with respect their connections, breaking ties between
+        minimizing models randomly. Mutates the graph in-place.
+
+        :return: None
+        """
         self.agents = [choice(self.hamming_distance_rule(i))
             for i in range(len(self.agents))]
 
