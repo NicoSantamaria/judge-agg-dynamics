@@ -98,6 +98,14 @@ class Graph:
 
 
     def hamming_distance_rule(self, agent: int) -> List[Interpretation]:
+        """
+        Computes the Hamming distance-based rule for one specified agent in the graph,
+        returning all the minimizing models with respect to that agent and its connections.
+
+        :param agent: The index of the agent for which the Hamming distance-based
+        aggregation rule is computed.
+        :return: The set of minimizing models for the agent with respect to its connections.
+        """
         num_agents: int = len(self.agents)
         if agent < 0 or agent >= num_agents:
             raise ValueError("Agent not found in graph.")
@@ -105,14 +113,18 @@ class Graph:
         candidates: List[Interpretation] = []
         current_min = float('inf')
 
+        # Compute the total distance to the relevant agents for each model
         for candidate in self.models:
             candidate_distance: int = 0
+
+            # Find connections to the agent in question and add their models' distance
             for connection in self.connections:
                 (first_agent, second_agent) = connection
                 second_agent_model = self.agents[second_agent]
                 if first_agent == agent:
                     candidate_distance += hamming_distance(candidate, second_agent_model)
 
+            # Only store the minimizing models
             if candidate_distance < current_min:
                 candidates = [candidate]
                 current_min = candidate_distance
