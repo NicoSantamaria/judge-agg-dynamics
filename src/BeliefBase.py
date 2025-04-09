@@ -54,7 +54,16 @@ class BeliefBase:
 
 
     def get_models(self) -> List[Interpretation]:
+        """
+        Models are assignments of truth values to the atomic propositions in the belief base
+        which render the conjunctive sentence of integrity constraints true.
+
+        :return: A list of vectors over Z_2 representing rational assignments of truth values
+        to the atomic propositions with respect to the integrity constraints.
+        """
         models: List[Interpretation] = list()
+
+        # Brute force check every possible assignment of truth values
         for interp in product([Z2(0), Z2(1)], repeat=len(self.atoms)):
             interp_list = list(interp)
             if not self.constraints or evaluate_sentence(self.atoms, interp_list, self.constraints):
