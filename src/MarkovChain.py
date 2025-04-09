@@ -14,6 +14,7 @@ from src.Graph import Graph
 # TODO: Pretty printing and by_agent option for get_result_by_state
 # TODO: Do not build states, state_graph_matrix and stationary until necessary
 # TODO: function to get result for single iteration of distance rule?
+# TODO: Docstrings and comments
 class MarkovChain:
     def __init__(self, graph: Graph) -> None:
         self.agents: List[Interpretation] = graph.agents
