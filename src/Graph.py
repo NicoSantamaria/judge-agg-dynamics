@@ -10,6 +10,18 @@ from src.BeliefBase import BeliefBase
 # TODO: implement networkx to draw nice graphs
 # TODO: switch order of agents and connections and allow connection to be empty
 class Graph:
+    """
+
+    ATTRIBUTES:
+        models (List[Interpretation]): The set of vectors over Z_2 representing rational
+        judgments with respect to the integrity constraints of an agenda.
+        connections: List[Connection]: The edges in the graph, representing by ordered
+        tuples from one agent to another.
+        agents: List[Agent]: The beliefs (as represented by models) by each agent in the
+        graph. Agents are represented by vertices in the graph.
+
+    REFERENCES:
+    """
     def __init__(self,
         models: List[Interpretation] | BeliefBase,
         connections: List[Connection]=[],
