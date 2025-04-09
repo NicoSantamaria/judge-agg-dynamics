@@ -54,7 +54,7 @@ class Graph:
         Mutates the graph in-place to add a new edge to the self.connections attribute.
 
         :param connection: The new edge to be added.
-        :return:
+        :return: None
         """
         (first_agent, second_agent) = connection
         num_agents: int = len(self.agents)
@@ -68,7 +68,7 @@ class Graph:
         Mutates the graph in-place to remove the edge from the self.connections attribute.
 
         :param connection: The edge to be removed.
-        :return:
+        :return: None
         """
         if connection not in self.connections:
             raise ValueError("Connection to be removed was not found.")
@@ -76,6 +76,11 @@ class Graph:
 
 
     def complete_graph(self) -> None:
+        """
+        Mutates the graph in-place to add all possible connections between agents.
+
+        :return: None
+        """
         num_agents: int = len(self.agents)
         self.connections = [(a, b) for a, b in product(range(num_agents), repeat=2)]
 
