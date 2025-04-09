@@ -64,6 +64,12 @@ class Graph:
 
 
     def remove_connection(self, connection: Connection) -> None:
+        """
+        Mutates the graph in-place to remove the edge from the self.connections attribute.
+
+        :param connection: The edge to be removed.
+        :return:
+        """
         if connection not in self.connections:
             raise ValueError("Connection to be removed was not found.")
         self.connections.remove(connection)
