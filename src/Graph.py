@@ -11,6 +11,9 @@ from src.BeliefBase import BeliefBase
 # TODO: switch order of agents and connections and allow connection to be empty
 class Graph:
     """
+    Models a social network, where each vertex represents a rational agent holding
+    an opinion on the agent, and each edge represents a relationship between rational agents.
+    Simulates iterations of the Hamming distance-based aggregation rule.
 
     ATTRIBUTES:
         models (List[Interpretation]): The set of vectors over Z_2 representing rational
