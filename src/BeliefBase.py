@@ -33,9 +33,20 @@ class BeliefBase:
 
     @staticmethod
     def get_constraints(constraints: List[Sentence]) -> Sentence:
+        """
+        Any rational interpretation of the atomic propositions with respect to the
+        propositional sentences in the set of integrity constraints also satisfies the
+        single conjunction of sentences in the set of integrity constraints. Returns the
+        single conjunctive sentences from the set of propositional sentences forming the
+        integrity constraints.
+
+        :param constraints: The propositional sentences in the set of integrity constraints.
+        :return: The conjunction of sentences in the set of integrity constraints.
+        """
         if not constraints:
             return list()
 
+        # Build the single conjunctive sentence from the sentences in the integrity constraints.
         constraint_sentence: Sentence = constraints[0]
         for sentence in constraints[1:]:
             constraint_sentence = [Logic.AND] + constraint_sentence + sentence
