@@ -50,6 +50,12 @@ class Graph:
 
 
     def add_connection(self, connection: Connection) -> None:
+        """
+        Mutates the graph in-place to add a new edge to the self.connections attribute.
+
+        :param connection: The new edge to be added.
+        :return:
+        """
         (first_agent, second_agent) = connection
         num_agents: int = len(self.agents)
         if first_agent >= num_agents or second_agent >= num_agents:
