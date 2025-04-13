@@ -15,7 +15,7 @@ def run_experiment():
 
     FINDINGS: Yes. After many iterations, the most frequent belief for all
     of the 3 agents is the belief (0, 0, 1), where each agent could adopt
-    one or more beliefs after a single iteration of the update rule. 
+    one or more beliefs after a single iteration of the update rule.
     """
     K = BeliefBase(
         [Prop.P, Prop.Q, Prop.R],
