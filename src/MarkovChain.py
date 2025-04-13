@@ -55,6 +55,7 @@ class MarkovChain:
         self.agents: List[Interpretation] = graph.agents
         self.model_matrix: MatrixZ2 = np.transpose(np.array(graph.models))
 
+        # build coord_matrix from the agents and the model_matrix
         if self.model_matrix.size > 0 and len(self.agents) > 0:
             rows = len(self.model_matrix[0])
             cols = len(self.agents)
@@ -63,6 +64,8 @@ class MarkovChain:
             agent_tuples = [tuple(agent) for agent in self.agents]
             model_tuples = [tuple(model) for model in np.transpose(self.model_matrix)]
 
+            # if the agent i's belief matches the j-th belief in the model matrix,
+            # then coord_matrix[j, i] = 1, else 0.
             for i, agent_tuple in enumerate(agent_tuples):
                 for j, model_tuple in enumerate(model_tuples):
                     if agent_tuple == model_tuple:
@@ -72,6 +75,7 @@ class MarkovChain:
         else:
             self.coord_matrix: MatrixZ2 = np.array([], dtype=object)
 
+        # build adjacency matrix
         dim: int = len(self.agents)
         if dim == 0:
             self.adjacency: MatrixZ2 = np.array([])
@@ -83,16 +87,17 @@ class MarkovChain:
                 else:
                     self.adjacency[i, j] = Z2.ZERO
 
-        # we probably don't want to have to call states of state_graph_matrix until
-        # necessary for performance reasons, since those are the most expensive
-        # operations
+        # build states, state_graph_matrix, and stationary
+        # states is computed by finding all the permutations of matrices over
+        # Z2 such that each column has exactly one 1; this is achieved by calling
+        # get_possible states on a matrix of all 1s.
         self.states: List[MatrixZ2] = self._get_possible_states(
             np.full(self.coord_matrix.shape, Z2.ONE, dtype=object)
         )
         self.state_graph_matrix: Matrix = self._build_state_graph()
         self.stationary: Matrix = find_stationary(self.state_graph_matrix)
 
-    # needs testing
+
     def get_state_models(self, coord_matrix: MatrixZ2 | None=None) -> MatrixZ2:
         if coord_matrix is None:
             coord_matrix = self.coord_matrix
