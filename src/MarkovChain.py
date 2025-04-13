@@ -99,6 +99,12 @@ class MarkovChain:
 
 
     def get_state_models(self, coord_matrix: MatrixZ2 | None=None) -> MatrixZ2:
+        """
+        From a given coordinate matrix, recover the models representing each agents' beliefs.
+
+        :param coord_matrix: Matrix providing the coordinates of each agent's beliefs in model_matrix
+        :return: Matrix where the j-th column represents the belief of the j-th agent.
+        """
         if coord_matrix is None:
             coord_matrix = self.coord_matrix
 
@@ -106,6 +112,8 @@ class MarkovChain:
             return np.array([])
         elif self.model_matrix.shape[1] != coord_matrix.shape[0]:
             raise ValueError("Model and coord matrices must be compatible for matrix multiplication.")
+
+        # Models are recovered by multiplication of model and coord matrices.
         return np.matmul(self.model_matrix, coord_matrix)
 
 
