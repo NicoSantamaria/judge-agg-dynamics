@@ -70,7 +70,7 @@ class MarkovChain:
                     else:
                         self.coord_matrix[j, i] = Z2.ZERO
         else:
-            self.coord_matrix = np.array([])
+            self.coord_matrix: MatrixZ2 = np.array([], dtype=object)
 
         dim: int = len(self.agents)
         if dim == 0:
