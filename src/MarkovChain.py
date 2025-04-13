@@ -155,15 +155,28 @@ class MarkovChain:
 
     @staticmethod
     def model_distances(mat1: MatrixZ2, mat2: MatrixZ2) -> Matrix:
+        """
+        Computes a matrix of distances between two matrices. Each (i, j) entry
+        in the return matrix corresponds to the hamming distance between row i in
+        mat1 and row j in mat2.
+
+        :param mat1: A matrix over Z2.
+        :param mat2: A matrix over Z2.
+        :return: A matrix of hamming distances between rows in mat1 and columns in mat2.
+        """
         if mat1.size == 0 or mat2.size == 0:
             return np.array([])
 
+        # The computation technique mirrors matrix multiplication, so the matrices must be
+        # compatible for matrix multiplication.
         mat1_rows, mat1_cols = mat1.shape
         mat2_rows, mat2_cols = mat2.shape
         distance_matrix: Matrix = np.zeros((mat1_rows, mat2_cols))
         if mat1_cols != mat2_rows:
             raise ValueError("Matrices must be compatible for multiplication to find model distances.")
 
+        # entry (i, j) in the return matrix is the hamming_distance of row i in mat1
+        # and column j in mat2.
         for i, model1 in enumerate(mat1):
             for j, model2 in enumerate(np.transpose(mat2)):
                 model1 = cast(Interpretation, model1)
