@@ -225,20 +225,36 @@ class MarkovChain:
 
 
     def _get_possible_states(self, next_coord_matrix: MatrixZ2) -> List[MatrixZ2]:
+        """
+        From a matrix providing the coordinates of the possible judgments for each agent
+        after a single iteration of the Hamming distance based aggregation rule (such as that
+        returned by the update_from_state method), returns a list of possible coordinate matrices
+        where each agent adopts exactly one of those possible judgments. Amounts to finding all
+        possible matrices with exactly one 1 entry in each column from a matrix over Z2.
+
+        :param next_coord_matrix: A matrix providing the coordinates of the possible judgments
+        for each agent after a single iteration of the Hamming distance based aggregation rule
+        :return: All possible coordinate matrices where each agent adopts exactly one of
+        those possible judgments after a single iteration of the Hamming distance based aggregation.
+        """
         if next_coord_matrix.size == 0 == self.coord_matrix.size:
             return []
         if next_coord_matrix.shape != self.coord_matrix.shape:
             raise ValueError("Coordinate matrices must have same dimensions.")
 
+        # Find the indices of all the rows with a 1 entry
         coord_matrix: Matrix = matrix_z2_to_matrix(next_coord_matrix)
         ones_positions: List[Matrix] = []
         for col in range(coord_matrix.shape[1]):
             rows_with_ones: Matrix = np.where(coord_matrix[:, col] == 1.)[0]
             ones_positions.append(rows_with_ones)
 
+        # Find all permutations of rows with a 1 entry
         valid_arrays: List[MatrixZ2] = []
         for combo in product(*ones_positions):
             new_arr = np.zeros_like(coord_matrix)
+
+            # From each permutation, construct the corresponding coord_matrix
             for col, row in enumerate(combo):
                 new_arr[row, col] = 1.
             valid_arrays.append(matrix_to_matrix_z2(new_arr))
