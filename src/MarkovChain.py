@@ -16,6 +16,41 @@ from src.Graph import Graph
 # TODO: function to get result for single iteration of distance rule?
 # TODO: Docstrings and comments
 class MarkovChain:
+    """
+    From a Graph object, constructs every possible state that graph can
+    assume and computes the probability of moving from each state to another
+    after a single iteration of the Hamming distance-based aggregation rule. These
+    probabilities form the entries of Markov transition matrix, which is used to
+    compute a stationary matrix.
+
+    ATTRIBUTES:
+        agents (List[Interpretation]): The set of vectors representing rational agents.
+        model_matrix (Matrix): A matrix with columns representing all the rational interpretations
+        of the agenda with respect to the integrity constraints contained in the Graph object.
+        coord_matrix (MatrixZ2): A matrix representing the coordinates of each agents' beliefs in
+        the model_matrix.
+        adjacency (MatrixZ2): Adjacency matrix for the Graph object-- each 1 entry at (i, j)
+        represents a directed edge from agent i to agent j.
+        states (List[MatrixZ2]): Every possible state the graph can take, as represented by coord
+        matrices.
+        state_graph_matrix (Matrix): The transition matrix for the Markov chain. Each entry (i, j)
+        represents the probability of moving from state i to state j after a single iteration
+        of the Hamming distance-based aggregation rule.
+        self.stationary (Matrix): The stationary matrix for the Markov chain, computed from
+        state_graph_matrix.
+
+
+    REFERENCES:
+        [1] Gabriella Pigozzi. Belief merging and the discursive dilemma: an
+                argument-based account to paradoxes of judgment aggregation. Synthese,
+                152(2):285–98, 2006.
+        [2] Christian List. The theory of judgment aggregation: An introductory
+                review. Synthese, 187(1):179–207, 2012.
+        [3] Gregory Valiant and Mary Wootters. Lecture #13: introduction to markov chains, and a
+                randomized algorithm for 2-SAT. 2025.
+                https://web.stanford.edu/class/cs265/Lectures/Lecture13/l13.pdf
+
+    """
     def __init__(self, graph: Graph) -> None:
         self.agents: List[Interpretation] = graph.agents
         self.model_matrix: MatrixZ2 = np.transpose(np.array(graph.models))
