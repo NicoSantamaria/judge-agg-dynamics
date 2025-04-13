@@ -187,11 +187,22 @@ class MarkovChain:
 
 
     def update_from_state(self, coord_matrix: MatrixZ2) -> MatrixZ2:
+        """
+        For a given coordinate matrix representing a state of the graph, returns a matrix
+        where each entry (i, j) represents the possibility that agent j will adopt the
+        i-th belief in the model matrix after a single iteration of the Hamming distance
+        based aggregation rule.
+
+        :param coord_matrix: A coordinate matrix over Z2 representing a possible graph state.
+        :return: A matrix providing the coordinates of the possible judgments for each agent
+        after a single iteration of the Hamming distance based aggregation rule on the coord_matrix.
+        """
         if coord_matrix.size == 0 == self.coord_matrix.size:
             return np.array([])
         elif coord_matrix.shape != self.coord_matrix.shape:
             raise ValueError("Coordinate matrices must have same dimensions.")
 
+        # Compute the distances from the agents' beliefs to every possible model.
         distances: Matrix = np.matmul(
             self.model_distances(
                 np.transpose(self.model_matrix),
@@ -200,9 +211,13 @@ class MarkovChain:
             matrix_z2_to_matrix(np.transpose(self.adjacency))
         )
 
+        # Find the minimum distances in each column and replace with 1; these are all
+        # the distances that the agents in that column can possibly adopt
         min_vals = np.min(distances, axis=0)
         next_coord_matrix = np.zeros_like(distances)
         for col in range(distances.shape[1]):
+
+            # Build a matrix indicating if each entry is minimal in its column.
             min_mask = (distances[:, col] == min_vals[col])
             next_coord_matrix[:, col] = min_mask.astype(int)
 
