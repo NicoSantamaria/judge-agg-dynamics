@@ -118,20 +118,38 @@ class MarkovChain:
 
 
     def get_result_by_state(self, coord_matrix: MatrixZ2 | None=None) -> List[Tuple[float, MatrixZ2]]:
+        """
+        For a given coord_matrix representing a state of the graph, returns the possible
+        states that can be achieved after many iterations of the update rule together with
+        the probability of attaining that state.
+
+        :param coord_matrix: coord_matrix representing a possible initial graph state.
+        :return: A list of probabilities of achieving each possible state, together with a matrix
+        representing that state, where the j-th column represents the belief of agent j in
+        that state.
+        """
         if coord_matrix is None:
             coord_matrix = self.coord_matrix
 
+        # Find all possible states together with their respective probabilities
         results: List[Tuple[float, MatrixZ2]] = []
         for i, state in enumerate(self.states):
+
+            # Find the results from the stationary matrix for the given coord_matrix
             if np.array_equal(coord_matrix, state):
                 end_state_probs = self.stationary[i]
+
+                # Find all end states with non-zero probability from the initial
                 for end_state_index, end_state_prob in enumerate(end_state_probs):
                     end_state_prob = cast(float, end_state_prob)
+
+                    # append probability and possible state
                     if end_state_prob != 0:
                         results.append((
                             end_state_prob,
                             self.get_state_models(self.states[end_state_index])
                         ))
+
         return results
 
 
