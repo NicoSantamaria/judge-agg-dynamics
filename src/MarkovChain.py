@@ -263,15 +263,26 @@ class MarkovChain:
 
 
     def _build_state_graph(self) -> Matrix:
+        """
+        Build the Markov transition matrix where each (i, j) entry
+        represents the probability of attaining the state j from the
+        state i.
+
+        :return: The Markov transition matrix.
+        """
         dim: int = len(self.states)
         state_graph_matrix: Matrix = np.zeros((dim, dim))
         for i, state in enumerate(self.states):
+
+            # For each state, find all the possible next states
             next_states: List[MatrixZ2] = self._get_possible_states(
                 self.update_from_state(state)
             )
 
             for j in range(dim):
                 for next_state in next_states:
+
+                    # Any of the possible next states can be attained with equal probability.
                     if np.array_equal(self.states[j], next_state):
                         state_graph_matrix[i, j] = 1 / len(next_states)
 
