@@ -9,6 +9,7 @@ from src.BeliefBase import BeliefBase
 # TODO: Allow input by integers
 # TODO: implement networkx to draw nice graphs
 # TODO: switch order of agents and connections and allow connection to be empty
+# TODO: docstrings, comments, and testing for add_agent and remove_agent methods
 class Graph:
     """
     Models a social network, where each vertex represents a rational agent holding
@@ -50,6 +51,16 @@ class Graph:
             if first_agent >= num_agents or second_agent >= num_agents:
                 raise ValueError("Connections can only be drawn between agents.")
         self.connections: List[Connection] = connections
+
+
+    def add_agent(self, agent: Interpretation) -> None:
+        if agent not in self.models:
+            raise ValueError("Agents must be represented by models.")
+        self.agents.append(agent)
+
+
+    def remove_agent(self, agent: int) -> None:
+        self.agents.pop(agent)
 
 
     def add_connection(self, connection: Connection) -> None:
