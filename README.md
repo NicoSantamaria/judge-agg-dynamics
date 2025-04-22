@@ -31,7 +31,7 @@ Z2.ZERO
 ```
 - `Prop` represents an atomic proposition.
 - `Logic` represents a logical operation.
-- 
+
 The `Prop` and `Logic` can be used together to compose complex propositional sentences, whose models can be expressed as 
 lists of the `Z2` enum.
 
@@ -45,9 +45,9 @@ sentences constructed from those atoms to serve as integrity constraints. Propos
 in Polish notation, with each logical operation preceding its arguments. The `BeliefBase` class then computes the 
 set of models for that constrained agenda. 
 
-For example, consider the libel example [^1] with the agenda $X=\{p, q, r\}$ and the set of integrity constraints 
-$I - \{r \Leftrightarrow (p \wedge q)\}$. We can then use the `BeliefBase` class to compute the set of models representing rational judgments 
-of the agenda.
+For example, consider the libel example [^1] [^3] with the agenda $X={p, q, r}$ and the set of integrity constraints 
+$I = {r \Leftrightarrow (p \wedge q)}$. We can then use the `BeliefBase` class to compute the set of models representing 
+rational judgments of the agenda.
 
 ```python
 >>> from utils.enums import Z2, Prop, Logic
@@ -60,7 +60,6 @@ of the agenda.
 ... ]
 >>> K = BeliefBase(props, constraints)
 >>> K.models
-[
     [Z2.ZERO, Z2.ZERO, Z2.ONE], 
     [Z2.ZERO, Z2.ONE, Z2.ONE], 
     [Z2.ONE, Z2.ZERO, Z2.ZERO], 
