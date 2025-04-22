@@ -15,6 +15,8 @@ from src.Graph import Graph
 # TODO: Do not build states, state_graph_matrix and stationary until necessary
 # TODO: function to get result for single iteration of distance rule?
 # TODO: Docstrings and comments
+# TODO: Move stationary matrix method back to class, check eigenvalues
+# TODO: Rice lecture notes as reference for stationary matrix
 class MarkovChain:
     """
     From a Graph object, constructs every possible state that graph can
