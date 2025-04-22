@@ -1,9 +1,9 @@
 import pytest
 from typing import List
-from src.Graph import Graph
-from src.BeliefBase import BeliefBase
-from utils.enums import Z2, Prop, Logic
-from utils.types import Connection, Interpretation
+from src.jaggdy.Graph import Graph
+from src.jaggdy.BeliefBase import BeliefBase
+from src.jaggdy.utils.enums import Z2, Prop, Logic
+from src.jaggdy.utils.types import Connection, Interpretation
 
 
 # should use the test case from test_markov_chain where two agentshave the same model

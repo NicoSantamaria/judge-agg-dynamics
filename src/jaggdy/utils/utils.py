@@ -1,8 +1,8 @@
 import numpy as np
 from typing import List
 # remove beliefs
-from utils.types import Interpretation, Sentence, Beliefs, Matrix, MatrixZ2
-from utils.enums import Prop, Logic, Z2
+from src.jaggdy.utils.types import Interpretation, Sentence, Beliefs, Matrix, MatrixZ2
+from src.jaggdy.utils.enums import Prop, Logic, Z2
 
 # TODO: remove beliefs from evaluate_sentence
 # TODO: See if can simplify matrix utils with where

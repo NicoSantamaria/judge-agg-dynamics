@@ -1,11 +1,12 @@
 import pytest
 import numpy as np
 from typing import List
-from src.Graph import Graph
-from src.BeliefBase import BeliefBase
-from src.MarkovChain import MarkovChain
-from utils.enums import Z2, Prop, Logic
-from utils.types import Connection, Interpretation, MatrixZ2, Matrix
+from src.jaggdy.Graph import Graph
+from src.jaggdy.BeliefBase import BeliefBase
+from src.jaggdy.MarkovChain import MarkovChain
+from src.jaggdy.utils.enums import Z2, Prop, Logic
+from src.jaggdy.utils.types import Connection, Interpretation, MatrixZ2
+
 
 def test_markov_chain_init():
     models: List[Interpretation] = [[Z2(1), Z2(0)], [Z2(0), Z2(1)]]

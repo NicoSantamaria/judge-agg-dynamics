@@ -1,8 +1,8 @@
 from typing import List
-from utils.enums import Z2
-from utils.types import Interpretation, Connection
-from src.MarkovChain import MarkovChain
-from src.Graph import Graph
+from src.jaggdy.utils import Z2
+from src.jaggdy.utils import Interpretation, Connection
+from src import MarkovChain
+from src import Graph
 
 
 def experiment5():

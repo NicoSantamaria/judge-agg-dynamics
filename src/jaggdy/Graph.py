@@ -1,9 +1,9 @@
 from random import choice
-from typing import List, cast
+from typing import List
 from itertools import product
-from utils.utils import hamming_distance
-from utils.types import Interpretation, Connection
-from src.BeliefBase import BeliefBase
+from src.jaggdy.utils.utils import hamming_distance
+from src.jaggdy.utils.types import Interpretation, Connection
+from src.jaggdy.BeliefBase import BeliefBase
 
 # TODO: use networkx library to get graphics of each graph
 # TODO: Allow input by integers

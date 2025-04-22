@@ -1,8 +1,8 @@
 from itertools import product
 from typing import List
-from utils.utils import evaluate_sentence
-from utils.enums import Z2, Prop, Logic
-from utils.types import Sentence, Interpretation
+from src.jaggdy.utils.utils import evaluate_sentence
+from src.jaggdy.utils.enums import Z2, Prop, Logic
+from src.jaggdy.utils.types import Sentence, Interpretation
 
 
 # TODO: allow input by strs instead of props

@@ -1,10 +1,10 @@
 from typing import List
 from random import choice
-from utils.enums import Z2, Prop, Logic
-from utils.types import Sentence, Interpretation, Connection
-from src.MarkovChain import MarkovChain
-from src.BeliefBase import BeliefBase
-from src.Graph import Graph
+from src.jaggdy.utils import Prop, Logic
+from src.jaggdy.utils import Sentence
+from src import MarkovChain
+from src import BeliefBase
+from src import Graph
 
 
 def experiment6():

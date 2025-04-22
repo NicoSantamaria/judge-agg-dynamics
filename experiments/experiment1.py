@@ -1,7 +1,7 @@
-from utils.enums import Z2, Prop, Logic
-from src.BeliefBase import BeliefBase
-from src.MarkovChain import MarkovChain
-from src.Graph import Graph
+from src.jaggdy.utils import Z2, Prop, Logic
+from src import BeliefBase
+from src import MarkovChain
+from src import Graph
 
 def run_experiment():
     """

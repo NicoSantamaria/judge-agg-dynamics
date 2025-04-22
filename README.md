@@ -16,17 +16,18 @@ enums throughout:
 
 - `Z2` represents an element in the ring of integers modulo 2, and computes the addition, multiplication, and 
 negation operations appropriately. For example:
+
 ```python
->>> from utils.enums import Z2
->>>
->>>
->>> x = Z2(1)
->>> y = Z2(0)
->>> x + y
+>> > from src.jaggdy.utils import Z2
+>> >
+>> >
+>> > x = Z2(1)
+>> > y = Z2(0)
+>> > x + y
 Z2.ONE
->>> x * y
+>> > x * y
 Z2.ZERO
->>> x + x
+>> > x + x
 Z2.ZERO
 ```
 - `Prop` represents an atomic proposition.
@@ -50,20 +51,20 @@ $I = {r \Leftrightarrow (p \wedge q)}$. We can then use the `BeliefBase` class t
 rational judgments of the agenda.
 
 ```python
->>> from utils.enums import Z2, Prop, Logic
->>> from src.BeliefBase import BeliefBase
->>>
->>>
->>> props = [Prop.P, Prop.Q, Prop.R]
->>> constraints = [
-...     [Logic.IFF, Prop.R, Logic.AND, Prop.P, Prop.Q]
-... ]
->>> K = BeliefBase(props, constraints)
->>> K.models
-    [Z2.ZERO, Z2.ZERO, Z2.ONE], 
-    [Z2.ZERO, Z2.ONE, Z2.ONE], 
-    [Z2.ONE, Z2.ZERO, Z2.ZERO], 
-    [Z2.ONE, Z2.ONE, Z2.ONE]
+>> > from src.jaggdy.utils import Z2, Prop, Logic
+>> > from src import BeliefBase
+>> >
+>> >
+>> > props = [Prop.P, Prop.Q, Prop.R]
+>> > constraints = [
+    ...[Logic.IFF, Prop.R, Logic.AND, Prop.P, Prop.Q]
+    ...]
+>> > K = BeliefBase(props, constraints)
+>> > K.models
+[Z2.ZERO, Z2.ZERO, Z2.ONE],
+[Z2.ZERO, Z2.ONE, Z2.ONE],
+[Z2.ONE, Z2.ZERO, Z2.ZERO],
+[Z2.ONE, Z2.ONE, Z2.ONE]
 ]
 ```
 
@@ -72,19 +73,19 @@ rational judgments of the agenda.
 The `Graph` class can be used to represent a number of rational agents, their judgments on the agenda, and the connections between them. A `Graph` object can be initialized with either a set of models or an instance of `BeliefBase`, as well as, optionally, agents and connections represented by models and tuples of integers.
 
 ```python
->>> from utils.enums import Z2, Prop, Logic
->>> from src.BeliefBase import BeliefBase
->>> from src.Graph import Graph
->>>
->>>
->>> props = [Prop.P, Prop.Q, Prop.Q]
->>> constraints = [
-...     [Logic.OR, Prop.P, Prop.Q],
-...     [Logic.NOT, Prop.Q]
-... ]
->>> K = BeliefBase(props, constraints)
->>> G = Graph(K)
->>> G.models
+>> > from src.jaggdy.utils import Z2, Prop, Logic
+>> > from src import BeliefBase
+>> > from src import Graph
+>> >
+>> >
+>> > props = [Prop.P, Prop.Q, Prop.Q]
+>> > constraints = [
+    ...[Logic.OR, Prop.P, Prop.Q],
+    ...[Logic.NOT, Prop.Q]
+    ...]
+>> > K = BeliefBase(props, constraints)
+>> > G = Graph(K)
+>> > G.models
 [
     [Z2.ONE, Z2.ZERO, Z2.ZERO],
     [Z2.ONE, Z2.ONE, Z2.ZERO]
@@ -156,59 +157,104 @@ by their respective coordinate matrices, and all matrices are implemented using 
 entries as `Z2` enums where appropriate.
 
 Consider the graph initialized in the above code snippets:
+
 ```python
->>> from src.MarkovChain import MarkovChain
->>>
->>>
->>> G.add_agent([Z2.ONE, Z2.ONE, Z2.ZERO])
->>> G.add_agent([Z2.ONE, Z2.ONE, Z2.ZERO])
->>> G.add_agent([Z2.ONE, Z2.ZERO, Z2.ZERO])
->>> G.complete_graph()
->>>
->>> MC = MarkovChain(G)
->>> MC.adjacency
+>> > from src import MarkovChain
+>> >
+>> >
+>> > G.add_agent([Z2.ONE, Z2.ONE, Z2.ZERO])
+>> > G.add_agent([Z2.ONE, Z2.ONE, Z2.ZERO])
+>> > G.add_agent([Z2.ONE, Z2.ZERO, Z2.ZERO])
+>> > G.complete_graph()
+>> >
+>> > MC = MarkovChain(G)
+>> > MC.adjacency
 [
     [Z2.ONE Z2.ONE Z2.ONE]
     [Z2.ONE Z2.ONE Z2.ONE]
-    [Z2.ONE Z2.ONE Z2.ONE]
+[Z2.ONE
+Z2.ONE
+Z2.ONE]
 ]
->>> MC.states
+>> > MC.states
 [
     array([
         [Z2.ONE, Z2.ONE, Z2.ONE],
         [Z2.ZERO, Z2.ZERO, Z2.ZERO]
-    ], dtype=object), 
+    ], dtype=object),
     array([
         [Z2.ONE, Z2.ONE, Z2.ZERO],
         [Z2.ZERO, Z2.ZERO, Z2.ONE]
-    ], dtype=object), 
+    ], dtype=object),
     ...,
     array([
         [Z2.ZERO, Z2.ZERO, Z2.ZERO],
         [Z2.ONE, Z2.ONE, Z2.ONE]
     ], dtype=object)
 ]
->>> MC.state_graph_matrix
+>> > MC.state_graph_matrix
 [
     [1. 0. 0. 0. 0. 0. 0. 0.]
     [1. 0. 0. 0. 0. 0. 0. 0.]
-    [1. 0. 0. 0. 0. 0. 0. 0.]
-    [0. 0. 0. 0. 0. 0. 0. 1.]
-    [1. 0. 0. 0. 0. 0. 0. 0.]
-    [0. 0. 0. 0. 0. 0. 0. 1.]
-    [0. 0. 0. 0. 0. 0. 0. 1.]
-    [0. 0. 0. 0. 0. 0. 0. 1.]
+[1.
+0.
+0.
+0.
+0.
+0.
+0.
+0.]
+[0. 0. 0. 0. 0. 0. 0. 1.]
+[1.
+0.
+0.
+0.
+0.
+0.
+0.
+0.]
+[0. 0. 0. 0. 0. 0. 0. 1.]
+[0.
+0.
+0.
+0.
+0.
+0.
+0.
+1.]
+[0. 0. 0. 0. 0. 0. 0. 1.]
 ]
->>> MC.stationary
+>> > MC.stationary
 [
     [1. 0. 0. 0. 0. 0. 0. 0.]
     [1. 0. 0. 0. 0. 0. 0. 0.]
-    [1. 0. 0. 0. 0. 0. 0. 0.]
-    [0. 0. 0. 0. 0. 0. 0. 1.]
-    [1. 0. 0. 0. 0. 0. 0. 0.]
-    [0. 0. 0. 0. 0. 0. 0. 1.]
-    [0. 0. 0. 0. 0. 0. 0. 1.]
-    [0. 0. 0. 0. 0. 0. 0. 1.]
+[1.
+0.
+0.
+0.
+0.
+0.
+0.
+0.]
+[0. 0. 0. 0. 0. 0. 0. 1.]
+[1.
+0.
+0.
+0.
+0.
+0.
+0.
+0.]
+[0. 0. 0. 0. 0. 0. 0. 1.]
+[0.
+0.
+0.
+0.
+0.
+0.
+0.
+1.]
+[0. 0. 0. 0. 0. 0. 0. 1.]
 ]
 ```
 In this case, no state produces a tie with respect to the Hamming distance-based rule, so the stationary and state 

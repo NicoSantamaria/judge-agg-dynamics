@@ -1,5 +1,5 @@
-from src.BeliefBase import BeliefBase
-from utils.enums import Logic, Prop, Z2
+from src.jaggdy.BeliefBase import BeliefBase
+from src.jaggdy.utils.enums import Logic, Prop, Z2
 
 def test_get_constraints():
     K = BeliefBase([Prop.P, Prop.Q], [])

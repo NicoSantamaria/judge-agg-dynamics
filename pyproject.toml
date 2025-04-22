@@ -1,6 +1,26 @@
-[project]
-name = "judge-agg-dynamics"
-version = "0.1.0"
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
 
-[project.optional-dependencies]
-dev = ["pytest"]
+[project]
+name = "jaggdy"
+version = "0.1.0"
+description = "Simulating judgment aggregation dynamics in social networks."
+authors = [
+  { name="Nico Santamaria", email="nicoasantamaria@gmail.com" }
+]
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/NicoSantamaria/judge-agg-dynamics"
+
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

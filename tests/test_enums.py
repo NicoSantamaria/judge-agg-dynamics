@@ -1,5 +1,5 @@
 import pytest
-from utils.enums import Z2, Logic, Prop
+from src.jaggdy.utils.enums import Z2, Logic, Prop
 
 def test_Z2():
     assert Z2(0) == Z2.ZERO

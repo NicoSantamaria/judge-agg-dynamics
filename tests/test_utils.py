@@ -1,8 +1,10 @@
 import pytest
 import numpy as np
-from utils.utils import (hamming_distance, evaluate_sentence, ints_to_interpretation,
-    interpretation_to_ints, strs_to_sentence, use_operation, matrix_z2_to_matrix, matrix_to_matrix_z2)
-from utils.enums import Z2, Logic, Prop
+from src.jaggdy.utils.utils import (hamming_distance,
+    evaluate_sentence, ints_to_interpretation,
+    interpretation_to_ints, strs_to_sentence, use_operation,
+    matrix_z2_to_matrix, matrix_to_matrix_z2)
+from src.jaggdy.utils.utils import Z2, Logic, Prop
 
 
 def test_hamming_distance():
