@@ -1,5 +1,5 @@
-# judge-agg-dynamics
-Python library for Markov Chain analysis of constrained belief propagation through 
+# Judgment Aggregation in Social Networks
+`jaggdy` is a Python package for Markov Chain analysis of constrained belief propagation through 
 social networks of rational agents. For more information on the theoretical background
 and purpose of the library, see [^1]
 [link to my thesis once I've put it online somewhere]. 
