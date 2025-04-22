@@ -54,12 +54,26 @@ class Graph:
 
 
     def add_agent(self, agent: Interpretation) -> None:
+        """
+        Mutates the graph in-place to add a new agent to self.agents by the model
+        representing its set of beliefs.
+
+        :param agent: The interpretation representing the agent's judgment.
+        :return: None
+        """
         if agent not in self.models:
             raise ValueError("Agents must be represented by models.")
         self.agents.append(agent)
 
 
     def remove_agent(self, agent: int) -> None:
+        """
+        Mutates the graph in-pace to remove an agent from the graph by its
+        position in the self.agents list attribute.
+
+        :param agent: The index of the agent to be removed in self.agents
+        :return: None
+        """
         self.agents.pop(agent)
 
 
