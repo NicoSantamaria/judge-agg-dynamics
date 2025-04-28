@@ -6,6 +6,7 @@ from src.jaggdy.utils.types import Sentence, Interpretation
 
 
 # TODO: allow input by strs instead of props
+# TODO: implement Sympy or a faster sat sovler to find models
 class BeliefBase:
     """
     A `belief base` contains a set of atomic propositions, a set of rational
